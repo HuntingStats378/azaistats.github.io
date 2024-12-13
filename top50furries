@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Most Subscribed Furries</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap');
+        .userList {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+        }
+    
+        .userListItem {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+    
+        .userProfilePic {
+            width: 50px;
+            height: 50px;
+            margin-right: 10px;
+            border-radius: 50%;
+        }
+    
+        .userInfo {
+            display: flex;
+            flex-direction: column;
+        }
+    
+        .userName {
+            font-weight: bold;
+            margin-bottom: 5px;
+            }
+    
+        .subscriberCount {
+            font-weight: bold;
+            }
+        body {
+            font-family: 'Outfit', sans-serif;
+        }
+    </style>
+    </head>
+<body>
+<div id="userList" class="userList">
+</div>
+
+<script>
+    async function fetchUserData(userId) {
+        const url = `https://backend.mixerno.space/api/youtube/estv3/${userId}`;
+        const response = await fetch(url);
+        const data = await response.json();
+        const user = data.items[0];
+
+        return {
+            subscribers: parseInt(user.statistics.subscriberCount, 10),
+            title: user.snippet.title,
+            image: user.snippet.thumbnails.default.url
+        };
+    }
+    function updateSubscriberCounts(currentCounts) {
+        const userListDiv = document.getElementById("userList");
+        userListDiv.innerHTML = "";
+        const sortedCounts = Object.entries(currentCounts)
+            .sort((a, b) => b[1].subscribers - a[1].subscribers)
+            .slice(0, 50);
+        sortedCounts.forEach(([userId, userData]) => {
+            const listItem = document.createElement("div");
+            listItem.classList.add("userListItem");
+            const profilePic = document.createElement("img");
+            profilePic.src = userData.image;
+            profilePic.alt = "Profile Picture";
+            profilePic.classList.add("userProfilePic");
+            listItem.appendChild(profilePic);
+            const userInfo = document.createElement("div");
+            userInfo.classList.add("userInfo");
+            const channelName = document.createElement("div");
+            channelName.textContent = userData.title;
+            channelName.classList.add("userName");
+            userInfo.appendChild(channelName);
+            const subscriberCount = document.createElement("div");
+subscriberCount.textContent = `${userData.subscribers.toLocaleString()}`; subscriberCount.classList.add("subscriberCount");
+            userInfo.appendChild(subscriberCount);
+            listItem.appendChild(userInfo);
+            userListDiv.appendChild(listItem);
+        });
+    }
+    async function main(userIds) {
+        let currentCounts = {};
+
+        while (true) {
+            const newCounts = {};
+            for (const userId of userIds) {
+                const userData = await fetchUserData(userId);
+                newCounts[userId] = userData;
+            }
+            updateSubscriberCounts(newCounts);
+            currentCounts = newCounts;
+            await new Promise(resolve => setTimeout(resolve, 60000));
+        }
+    }
+    const userIds = [
+        "UCx5HQPjpr3JAeBFKkar8E0A",
+        "UCO86mBfqBTsfEUnPvJ4s1bg",
+        "UCr3OIzi9He2kFdAMO7iRI8A",
+        "UCxAvWiU0ovMU9LI5nAX9pag",
+        "UCLjv1v1L9q708UFLbxIcvmg", "UC_nEHeUEVNY5ZYLRWg8KoZQ", "UCYL0au6V77nHEhVP9kUMwlQ", "UC2aNolp7Nc41x9M5CG6XKTg", "UC5f7oSBOc9c3rswDUBVqrng"
+    ];
+    main(userIds);
+</script>
+</body>
+</html>
