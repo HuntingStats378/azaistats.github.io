@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>AzaiStats | Smosh</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <div class="top-bar">
+        <div class="logo-container">
+            <img src="../logo.png" alt="Logo" class="logo">
+        </div>
+        <nav class="navigation">
+            <a href="../index.html" class="nav-link">Home</a>
+            <a href="../data.html" class="nav-link">Data</a>
+            <a href="../top50furries.html" class="nav-link">Top 50 Furries</a>
+        </nav>
+    </div>
+<h1> 183Club </h1>
+<h4> Data starting from 23 Oct 2005 </h4>
+<table id="dataTable">
+	<tr>
+    <th> Date </th>
+    <th> Subscribers </th>
+     </tr>     <tr>     	<td> 23 Oct 2005 </td>         <td> 0 </td>     <tr>     	<td> 30 Oct 2005 </td>         <td> 2 </td>     <tr>     	<td> 06 Nov 2005 </td>         <td> 4 </td>     <tr>     	<td> 13 Nov 2005 </td>         <td> 7 </td>     <tr>     	<td> 20 Nov 2005 </td>         <td> 7 </td>     <tr>     	<td> 27 Nov 2005 </td>         <td> 6 </td>     <tr>     	<td> 04 Dec 2005 </td>         <td> 9 </td>     <tr>     	<td> 11 Dec 2005 </td>         <td> 10 </td>     <tr>     	<td> 18 Dec 2005 </td>         <td> 9 </td>     <tr>     	<td> 25 Dec 2005 </td>         <td> 12 </td>     </tr>     <tr>     	<td> 01 Jan 2006 </td>         <td> 15 </td>     </tr>
+     <tr>     	<td> 08 Jan 2006 </td>         <td> 17 </td>     </tr>
+     <tr>     	<td> 15 Jan 2006 </td>         <td> 21 </td>     </tr>
+     <tr>     	<td> 22 Jan 2006 </td>         <td> 20 </td>     </tr>
+     <tr>     	<td> 29 Jan 2006 </td>         <td> 28 </td>     </tr>
+     <tr>     	<td> 05 Feb 2006 </td>         <td> 36 </td>     </tr>
+     <tr>     	<td> 12 Feb 2006 </td>         <td> 42 </td>     </tr>
+     <tr>     	<td> 19 Feb 2006 </td>         <td> 43 </td>     </tr>
+     <tr>     	<td> 26 Feb 2006 </td>         <td> 51 </td>     </tr>
+     <tr>     	<td> 05 Mar 2006 </td>         <td> 63 </td>     </tr>
+     <tr>     	<td> 12 Mar 2006 </td>         <td> 79 </td>     </tr>
+     <tr>     	<td> 19 Mar 2006 </td>         <td> 92 </td>     </tr>
+     <tr>     	<td> 26 Mar 2006 </td>         <td> 119 </td>     </tr>
+     <tr>     	<td> 02 Apr 2006 </td>         <td> 148 </td>     </tr>
+     <tr>     	<td> 09 Apr 2006 </td>         <td> 191 </td>     </tr>
+     <tr>     	<td> 16 Apr 2006 </td>         <td> 203 </td>     </tr>
+     <tr>     	<td> 23 Apr 2006 </td>         <td> 224 </td>     </tr>
+     <tr>     	<td> 30 Apr 2006 </td>         <td> 233 </td>     </tr>
+     <tr>     	<td> 07 May 2006 </td>         <td> 276 </td>     </tr>
+     <tr>     	<td> 14 May 2006 </td>         <td> 377 </td>     </tr>
+     <tr>     	<td> 21 May 2006 </td>         <td> 538 </td>     </tr>
+     <tr>     	<td> 28 May 2006 </td>         <td> 672 </td>     </tr>
+     <tr>     	<td> 04 Jun 2006 </td>         <td> 834 </td>     </tr>
+     <tr>     	<td> 11 Jun 2006 </td>         <td> 1076 </td>     </tr>
+     <tr>     	<td> 18 Jun 2006 </td>         <td> 0 </td>     </tr>
+</table>
+<br>
+<div id="graph" style="width: 600px; height: 400px;"></div>
+
+<script>
+function convertTableToGraph(tableId, graphId, options = {}) {
+
+    const table = document.getElementById(tableId);
+
+    if (!table) {
+        console.error(`table id '${tableId}' not found`);
+        return;
+    }
+
+
+    const headers = [];
+    const rows = table.querySelectorAll('tr');
+    const labels = [];
+    const data = [];
+
+
+    for (let i = 1; i < rows.length; i++) {
+        const cells = rows[i].querySelectorAll('td');
+        if (cells.length < 2) continue;
+
+        labels.push(cells[0].textContent.trim());
+        data.push(parseFloat(cells[1].textContent.trim()));
+    }
+
+    const chartOptions = {
+        type: options.type || 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: options.label || table.querySelector('th:nth-child(2)').textContent,
+                data: data,
+                borderColor: options.borderColor || 'rgb(75, 192, 192)',
+                tension: 0.1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: options.title || 'data visualization'
+                }
+            }
+        }
+    };
+    const graphContainer = document.getElementById(graphId);
+    const canvas = document.createElement('canvas');
+    graphContainer.innerHTML = '';
+    graphContainer.appendChild(canvas);
+
+    new Chart(canvas, chartOptions);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    convertTableToGraph('dataTable', 'graph', {
+        type: 'line',
+        title: 'Subscribers',
+        label: ''
+    });
+});
+</script>
+</body>
+</html>
+
+
+
