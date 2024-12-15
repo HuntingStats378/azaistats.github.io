@@ -2,24 +2,27 @@
 <html>
 <head>
 <title>AzaiStats | Smosh</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link rel="stylesheet" href="../style.css">
 </head>
 <body>
-<style>
- @import url('https://fonts.googleapis.com/css2?family=Kode+Mono:wght@400..700&display=swap');
-table, th, td {
-  border: 1px solid black;
-  border-collapse: collapse;
-}
-body {
-            font-family: 'Kode Mono', sans-serif;
-</style>
+    <div class="top-bar">
+        <div class="logo-container">
+            <img src="../logo.png" alt="Logo" class="logo">
+        </div>
+        <nav class="navigation">
+            <a href="index.html" class="nav-link">Home</a>
+            <a href="data.html" class="nav-link">Data</a>
+            <a href="top50furries.html" class="nav-link">Top 50 Furries</a>
+        </nav>
+    </div>
 <h1> Smosh </h1>
 <h4> Data starting from 1 Jan 2006 </h4>
-<table>
+<table id="dataTable">
 	<tr>
-    	<th> Date </th>
-        <th> Subscribers </th>
-    </tr>     <tr>     	<td> 01 Jan 2006 </td>         <td> 193 </td>     </tr>
+    <th> Date </th>
+    <th> Subscribers </th>
+     </tr>     <tr>     	<td> 01 Jan 2006 </td>         <td> 193 </td>     </tr>
      <tr>     	<td> 08 Jan 2006 </td>         <td> 205 </td>     </tr>
      <tr>     	<td> 15 Jan 2006 </td>         <td> 227 </td>     </tr>
      <tr>     	<td> 22 Jan 2006 </td>         <td> 255 </td>     </tr>
@@ -46,221 +49,285 @@ body {
      <tr>     	<td> 18 Jun 2006 </td>         <td> 6637 </td>     </tr>
      <tr>     	<td> 25 Jun 2006 </td>         <td> 7906 </td>     </tr>
      <tr>     	<td> 02 Jul 2006 </td>         <td> 8999 </td>     </tr>
-     <tr>     	<td> 09 Jul 2006 </td>         <td> 10,174 </td>     </tr>
-     <tr>     	<td> 16 Jul 2006 </td>         <td> 11,144 </td>     </tr>
-     <tr>     	<td> 23 Jul 2006 </td>         <td> 11,895 </td>     </tr>
-     <tr>     	<td> 30 Jul 2006 </td>         <td> 13,108 </td>     </tr>
-     <tr>     	<td> 06 Aug 2006 </td>         <td> 14,356 </td>     </tr>
-     <tr>     	<td> 13 Aug 2006 </td>         <td> 15,071 </td>     </tr>
-     <tr>     	<td> 20 Aug 2006 </td>         <td> 15,751 </td>     </tr>
-     <tr>     	<td> 27 Aug 2006 </td>         <td> 16,876 </td>     </tr>
-     <tr>     	<td> 03 Sep 2006 </td>         <td> 17,556 </td>     </tr>
-     <tr>     	<td> 10 Sep 2006 </td>         <td> 18,326 </td>     </tr>
-     <tr>     	<td> 17 Sep 2006 </td>         <td> 19,108 </td>     </tr>
-     <tr>     	<td> 24 Sep 2006 </td>         <td> 19,985 </td>     </tr>
-     <tr>     	<td> 01 Oct 2006 </td>         <td> 21,256 </td>     </tr>
-     <tr>     	<td> 08 Oct 2006 </td>         <td> 22,797 </td>     </tr>
-     <tr>     	<td> 15 Oct 2006 </td>         <td> 23,997 </td>     </tr>
-     <tr>     	<td> 22 Oct 2006 </td>         <td> 25,050 </td>     </tr>
-     <tr>     	<td> 29 Oct 2006 </td>         <td> 26,256 </td>     </tr>
-     <tr>     	<td> 05 Nov 2006 </td>         <td> 27,106 </td>     </tr>
-     <tr>     	<td> 12 Nov 2006 </td>         <td> 28,191 </td>     </tr>
-     <tr>     	<td> 19 Nov 2006 </td>         <td> 31,124 </td>     </tr>
-     <tr>     	<td> 26 Nov 2006 </td>         <td> 32,330 </td>     </tr>
-     <tr>     	<td> 03 Dec 2006 </td>         <td> 33,279 </td>     </tr>
-     <tr>     	<td> 10 Dec 2006 </td>         <td> 34,643 </td>     </tr>
-     <tr>     	<td> 17 Dec 2006 </td>         <td> 35,824 </td>     </tr>
-     <tr>     	<td> 24 Dec 2006 </td>         <td> 37,037 </td>     </tr>
-     <tr>     	<td> 31 Dec 2006 </td>         <td> 37,952 </td>     </tr>
-     <tr>     	<td> 07 Jan 2007 </td>         <td> 39,853 </td>     </tr>
-     <tr>     	<td> 14 Jan 2007 </td>         <td> 41,910 </td>     </tr>
-     <tr>     	<td> 21 Jan 2007 </td>         <td> 44,183 </td>     </tr>
-     <tr>     	<td> 28 Jan 2007 </td>         <td> 47,308 </td>     </tr>
-     <tr>     	<td> 04 Feb 2007 </td>         <td> 50,371 </td>     </tr>
-     <tr>     	<td> 11 Feb 2007 </td>         <td> 53,847 </td>     </tr>
-     <tr>     	<td> 18 Feb 2007 </td>         <td> 56,053 </td>     </tr>
-     <tr>     	<td> 25 Feb 2007 </td>         <td> 58,670 </td>     </tr>
-     <tr>     	<td> 04 Mar 2007 </td>         <td> 61,463 </td>     </tr>
-     <tr>     	<td> 11 Mar 2007 </td>         <td> 64,145 </td>     </tr>
-     <tr>     	<td> 18 Mar 2007 </td>         <td> 66,348 </td>     </tr>
-     <tr>     	<td> 25 Mar 2007 </td>         <td> 70,559 </td>     </tr>
-     <tr>     	<td> 01 Apr 2007 </td>         <td> 74,381 </td>     </tr>
-     <tr>     	<td> 08 Apr 2007 </td>         <td> 79,104 </td>     </tr>
-     <tr>     	<td> 15 Apr 2007 </td>         <td> 85,607 </td>     </tr>
-     <tr>     	<td> 22 Apr 2007 </td>         <td> 89,423 </td>     </tr>
-     <tr>     	<td> 29 Apr 2007 </td>         <td> 93,085 </td>     </tr>
-     <tr>     	<td> 06 May 2007 </td>         <td> 96,158 </td>     </tr>
-     <tr>     	<td> 13 May 2007 </td>         <td> 99,792 </td>     </tr>
-     <tr>     	<td> 20 May 2007 </td>         <td> 103,237 </td>     </tr>
-     <tr>     	<td> 27 May 2007 </td>         <td> 106,559 </td>     </tr>
-     <tr>     	<td> 03 Jun 2007 </td>         <td> 111,874 </td>     </tr>
-     <tr>     	<td> 10 Jun 2007 </td>         <td> 116,306 </td>     </tr>
-     <tr>     	<td> 17 Jun 2007 </td>         <td> 120,275 </td>     </tr>
-     <tr>     	<td> 24 Jun 2007 </td>         <td> 124,169 </td>     </tr>
-     <tr>     	<td> 01 Jul 2007 </td>         <td> 127,551 </td>     </tr>
-     <tr>     	<td> 08 Jul 2007 </td>         <td> 130,879 </td>     </tr>
-     <tr>     	<td> 15 Jul 2007 </td>         <td> 137,106 </td>     </tr>
-     <tr>     	<td> 22 Jul 2007 </td>         <td> 142,025 </td>     </tr>
-     <tr>     	<td> 29 Jul 2007 </td>         <td> 145,457 </td>     </tr>
-     <tr>     	<td> 05 Aug 2007 </td>         <td> 148,992 </td>     </tr>
-     <tr>     	<td> 12 Aug 2007 </td>         <td> 152,455 </td>     </tr>
-     <tr>     	<td> 19 Aug 2007 </td>         <td> 155,412 </td>     </tr>
-     <tr>     	<td> 26 Aug 2007 </td>         <td> 158,501 </td>     </tr>
-     <tr>     	<td> 02 Sep 2007 </td>         <td> 161,903 </td>     </tr>
-     <tr>     	<td> 09 Sep 2007 </td>         <td> 165,023 </td>     </tr>
-     <tr>     	<td> 16 Sep 2007 </td>         <td> 167,679 </td>     </tr>
-     <tr>     	<td> 23 Sep 2007 </td>         <td> 170,589 </td>     </tr>
-     <tr>     	<td> 30 Sep 2007 </td>         <td> 173,365 </td>     </tr>
-     <tr>     	<td> 07 Oct 2007 </td>         <td> 175,885 </td>     </tr>
-     <tr>     	<td> 14 Oct 2007 </td>         <td> 178,164 </td>     </tr>
-     <tr>     	<td> 21 Oct 2007 </td>         <td> 180,894 </td>     </tr>
-     <tr>     	<td> 28 Oct 2007 </td>         <td> 183,890 </td>     </tr>
-     <tr>     	<td> 04 Nov 2007 </td>         <td> 187,091 </td>     </tr>
-     <tr>     	<td> 11 Nov 2007 </td>         <td> 190,175 </td>     </tr>
-     <tr>     	<td> 18 Nov 2007 </td>         <td> 194,001 </td>     </tr>
-     <tr>     	<td> 25 Nov 2007 </td>         <td> 198,470 </td>     </tr>
-     <tr>     	<td> 02 Dec 2007 </td>         <td> 202,190 </td>     </tr>
-     <tr>     	<td> 09 Dec 2007 </td>         <td> 206,029 </td>     </tr>
-     <tr>     	<td> 16 Dec 2007 </td>         <td> 210,313 </td>     </tr>
-     <tr>     	<td> 23 Dec 2007 </td>         <td> 214,478 </td>     </tr>
-     <tr>     	<td> 30 Dec 2007 </td>         <td> 218,541 </td>     </tr>
-     <tr>     	<td> 06 Jan 2008 </td>         <td> 222,425 </td>     </tr>
-     <tr>     	<td> 13 Jan 2008 </td>         <td> 228,517 </td>     </tr>
-     <tr>     	<td> 20 Jan 2008 </td>         <td> 234,098 </td>     </tr>
-     <tr>     	<td> 27 Jan 2008 </td>         <td> 239,288 </td>     </tr>
-     <tr>     	<td> 03 Feb 2008 </td>         <td> 245,841 </td>     </tr>
-     <tr>     	<td> 10 Feb 2008 </td>         <td> 253,118 </td>     </tr>
-     <tr>     	<td> 17 Feb 2008 </td>         <td> 258,544 </td>     </tr>
-     <tr>     	<td> 24 Feb 2008 </td>         <td> 267,842 </td>     </tr>
-     <tr>     	<td> 02 Mar 2008 </td>         <td> 273,628 </td>     </tr>
-     <tr>     	<td> 09 Mar 2008 </td>         <td> 282,155 </td>     </tr>
-     <tr>     	<td> 16 Mar 2008 </td>         <td> 289,636 </td>     </tr>
-     <tr>     	<td> 23 Mar 2008 </td>         <td> 296,642 </td>     </tr>
-     <tr>     	<td> 30 Mar 2008 </td>         <td> 307,538 </td>     </tr>
-     <tr>     	<td> 06 Apr 2008 </td>         <td> 315,504 </td>     </tr>
-     <tr>     	<td> 13 Apr 2008 </td>         <td> 323,892 </td>     </tr>
-     <tr>     	<td> 20 Apr 2008 </td>         <td> 332,364 </td>     </tr>
-     <tr>     	<td> 27 Apr 2008 </td>         <td> 340,850 </td>     </tr>
-     <tr>     	<td> 04 May 2008 </td>         <td> 347,788 </td>     </tr>
-     <tr>     	<td> 11 May 2008 </td>         <td> 357,316 </td>     </tr>
-     <tr>     	<td> 18 May 2008 </td>         <td> 365,111 </td>     </tr>
-     <tr>     	<td> 25 May 2008 </td>         <td> 369,862 </td>     </tr>
-     <tr>     	<td> 01 Jun 2008 </td>         <td> 378,147 </td>     </tr>
-     <tr>     	<td> 08 Jun 2008 </td>         <td> 385,008 </td>     </tr>
-     <tr>     	<td> 15 Jun 2008 </td>         <td> 392,229 </td>     </tr>
-     <tr>     	<td> 22 Jun 2008 </td>         <td> 401,350 </td>     </tr>
-     <tr>     	<td> 29 Jun 2008 </td>         <td> 410,641 </td>     </tr>
-     <tr>     	<td> 06 Jul 2008 </td>         <td> 419,541 </td>     </tr>
-     <tr>     	<td> 13 Jul 2008 </td>         <td> 427,526 </td>     </tr>
-     <tr>     	<td> 20 Jul 2008 </td>         <td> 435,256 </td>     </tr>
-     <tr>     	<td> 27 Jul 2008 </td>         <td> 445,084 </td>     </tr>
-     <tr>     	<td> 03 Aug 2008 </td>         <td> 458,026 </td>     </tr>
-     <tr>     	<td> 10 Aug 2008 </td>         <td> 468,478 </td>     </tr>
-     <tr>     	<td> 17 Aug 2008 </td>         <td> 477,351 </td>     </tr>
-     <tr>     	<td> 24 Aug 2008 </td>         <td> 489,268 </td>     </tr>
-     <tr>     	<td> 31 Aug 2008 </td>         <td> 499,500 </td>     </tr>
-     <tr>     	<td> 07 Sep 2008 </td>         <td> 508,311 </td>     </tr>
-     <tr>     	<td> 14 Sep 2008 </td>         <td> 515,415 </td>     </tr>
-     <tr>     	<td> 21 Sep 2008 </td>         <td> 525,240 </td>     </tr>
-     <tr>     	<td> 28 Sep 2008 </td>         <td> 538,249 </td>     </tr>
-     <tr>     	<td> 05 Oct 2008 </td>         <td> 550,019 </td>     </tr>
-     <tr>     	<td> 12 Oct 2008 </td>         <td> 563,005 </td>     </tr>
-     <tr>     	<td> 19 Oct 2008 </td>         <td> 571,729 </td>     </tr>
-     <tr>     	<td> 26 Oct 2008 </td>         <td> 578,727 </td>     </tr>
-     <tr>     	<td> 02 Nov 2008 </td>         <td> 585,113 </td>     </tr>
-     <tr>     	<td> 09 Nov 2008 </td>         <td> 591,933 </td>     </tr>
-     <tr>     	<td> 16 Nov 2008 </td>         <td> 597,958 </td>     </tr>
-     <tr>     	<td> 23 Nov 2008 </td>         <td> 605,926 </td>     </tr>
-     <tr>     	<td> 30 Nov 2008 </td>         <td> 616,196 </td>     </tr>
-     <tr>     	<td> 07 Dec 2008 </td>         <td> 623,497 </td>     </tr>
-     <tr>     	<td> 14 Dec 2008 </td>         <td> 632,844 </td>     </tr>
-     <tr>     	<td> 21 Dec 2008 </td>         <td> 644,072 </td>     </tr>
-     <tr>     	<td> 28 Dec 2008 </td>         <td> 655,190 </td>     </tr>
-     <tr>     	<td> 04 Jan 2009 </td>         <td> 666,933 </td>     </tr>
-     <tr>     	<td> 11 Jan 2009 </td>         <td> 674,083 </td>     </tr>
-     <tr>     	<td> 18 Jan 2009 </td>         <td> 682,148 </td>     </tr>
-     <tr>     	<td> 25 Jan 2009 </td>         <td> 691,956 </td>     </tr>
-     <tr>     	<td> 01 Feb 2009 </td>         <td> 699,010 </td>     </tr>
-     <tr>     	<td> 08 Feb 2009 </td>         <td> 706,130 </td>     </tr>
-     <tr>     	<td> 15 Feb 2009 </td>         <td> 713,249 </td>     </tr>
-     <tr>     	<td> 22 Feb 2009 </td>         <td> 722,033 </td>     </tr>
-     <tr>     	<td> 01 Mar 2009 </td>         <td> 732,727 </td>     </tr>
-     <tr>     	<td> 08 Mar 2009 </td>         <td> 739,681 </td>     </tr>
-     <tr>     	<td> 15 Mar 2009 </td>         <td> 748,509 </td>     </tr>
-     <tr>     	<td> 22 Mar 2009 </td>         <td> 757,153 </td>     </tr>
-     <tr>     	<td> 29 Mar 2009 </td>         <td> 764,735 </td>     </tr>
-     <tr>     	<td> 05 Apr 2009 </td>         <td> 772,629 </td>     </tr>
-     <tr>     	<td> 12 Apr 2009 </td>         <td> 781,176 </td>     </tr>
-     <tr>     	<td> 19 Apr 2009 </td>         <td> 791,395 </td>     </tr>
-     <tr>     	<td> 26 Apr 2009 </td>         <td> 800,568 </td>     </tr>
-     <tr>     	<td> 03 May 2009 </td>         <td> 809,702 </td>     </tr>
-     <tr>     	<td> 10 May 2009 </td>         <td> 815,996 </td>     </tr>
-     <tr>     	<td> 17 May 2009 </td>         <td> 826,261 </td>     </tr>
-     <tr>     	<td> 24 May 2009 </td>         <td> 832,672 </td>     </tr>
-     <tr>     	<td> 31 May 2009 </td>         <td> 839,951 </td>     </tr>
-     <tr>     	<td> 07 Jun 2009 </td>         <td> 849,769 </td>     </tr>
-     <tr>     	<td> 14 Jun 2009 </td>         <td> 863,398 </td>     </tr>
-     <tr>     	<td> 21 Jun 2009 </td>         <td> 874,936 </td>     </tr>
-     <tr>     	<td> 28 Jun 2009 </td>         <td> 886,266 </td>     </tr>
-     <tr>     	<td> 05 Jul 2009 </td>         <td> 897,568 </td>     </tr>
-     <tr>     	<td> 12 Jul 2009 </td>         <td> 903,538 </td>     </tr>
-     <tr>     	<td> 19 Jul 2009 </td>         <td> 921,617 </td>     </tr>
-     <tr>     	<td> 26 Jul 2009 </td>         <td> 931,614 </td>     </tr>
-     <tr>     	<td> 02 Aug 2009 </td>         <td> 943,032 </td>     </tr>
-     <tr>     	<td> 09 Aug 2009 </td>         <td> 953,414 </td>     </tr>
-     <tr>     	<td> 16 Aug 2009 </td>         <td> 965,104 </td>     </tr>
-     <tr>     	<td> 23 Aug 2009 </td>         <td> 991,650 </td>     </tr>
-     <tr>     	<td> 30 Aug 2009 </td>         <td> 1,015,483 </td>     </tr>
-     <tr>     	<td> 06 Sep 2009 </td>         <td> 1,038,081 </td>     </tr>
-     <tr>     	<td> 13 Sep 2009 </td>         <td> 1,055,267 </td>     </tr>
-     <tr>     	<td> 20 Sep 2009 </td>         <td> 1,065,152 </td>     </tr>
-     <tr>     	<td> 27 Sep 2009 </td>         <td> 1,077,306 </td>     </tr>
-     <tr>     	<td> 04 Oct 2009 </td>         <td> 1,087,512 </td>     </tr>
-     <tr>     	<td> 11 Oct 2009 </td>         <td> 1,098,034 </td>     </tr>
-     <tr>     	<td> 18 Oct 2009 </td>         <td> 1,109,497 </td>     </tr>
-     <tr>     	<td> 25 Oct 2009 </td>         <td> 1,117,923 </td>     </tr>
-     <tr>     	<td> 01 Nov 2009 </td>         <td> 1,128,098 </td>     </tr>
-     <tr>     	<td> 08 Nov 2009 </td>         <td> 1,138,463 </td>     </tr>
-     <tr>     	<td> 15 Nov 2009 </td>         <td> 1,147,036 </td>     </tr>
-     <tr>     	<td> 22 Nov 2009 </td>         <td> 1,156,270 </td>     </tr>
-     <tr>     	<td> 29 Nov 2009 </td>         <td> 1,165,247 </td>     </tr>
-     <tr>     	<td> 06 Dec 2009 </td>         <td> 1,174,547 </td>     </tr>
-     <tr>     	<td> 13 Dec 2009 </td>         <td> 1,184,640 </td>     </tr>
-     <tr>     	<td> 20 Dec 2009 </td>         <td> 1,200,702 </td>     </tr>
-     <tr>     	<td> 27 Dec 2009 </td>         <td> 1,215,566 </td>     </tr>
-     <tr>     	<td> 03 Jan 2010 </td>         <td> 1,231,747 </td>     </tr>
-     <tr>     	<td> 10 Jan 2010 </td>         <td> 1,243,376 </td>     </tr>
-     <tr>     	<td> 17 Jan 2010 </td>         <td> 1,256,227 </td>     </tr>
-     <tr>     	<td> 24 Jan 2010 </td>         <td> 1,271,278 </td>     </tr>
-     <tr>     	<td> 31 Jan 2010 </td>         <td> 1,283,078 </td>     </tr>
-     <tr>     	<td> 07 Feb 2010 </td>         <td> 1,294,028 </td>     </tr>
-     <tr>     	<td> 14 Feb 2010 </td>         <td> 1,304,635 </td>     </tr>
-     <tr>     	<td> 21 Feb 2010 </td>         <td> 1,316,026 </td>     </tr>
-     <tr>     	<td> 28 Feb 2010 </td>         <td> 1,329,281 </td>     </tr>
-     <tr>     	<td> 07 Mar 2010 </td>         <td> 1,339,441 </td>     </tr>
-     <tr>     	<td> 14 Mar 2010 </td>         <td> 1,350,091 </td>     </tr>
-     <tr>     	<td> 21 Mar 2010 </td>         <td> 1,363,516 </td>     </tr>
-     <tr>     	<td> 28 Mar 2010 </td>         <td> 1,379,005 </td>     </tr>
-     <tr>     	<td> 04 Apr 2010 </td>         <td> 1,396,502 </td>     </tr>
-     <tr>     	<td> 11 Apr 2010 </td>         <td> 1,412,765 </td>     </tr>
-     <tr>     	<td> 18 Apr 2010 </td>         <td> 1,426,915 </td>     </tr>
-     <tr>     	<td> 25 Apr 2010 </td>         <td> 1,441,097 </td>     </tr>
-     <tr>     	<td> 02 May 2010 </td>         <td> 1,455,660 </td>     </tr>
-     <tr>     	<td> 09 May 2010 </td>         <td> 1,469,848 </td>     </tr>
-     <tr>     	<td> 16 May 2010 </td>         <td> 1,483,686 </td>     </tr>
-     <tr>     	<td> 23 May 2010 </td>         <td> 1,498,843 </td>     </tr>
-     <tr>     	<td> 30 May 2010 </td>         <td> 1,518,772 </td>     </tr>
-     <tr>     	<td> 06 Jun 2010 </td>         <td> 1,538,428 </td>     </tr>
-     <tr>     	<td> 13 Jun 2010 </td>         <td> 1,559,246 </td>     </tr>
-     <tr>     	<td> 20 Jun 2010 </td>         <td> 1,574,055 </td>     </tr>
-     <tr>     	<td> 27 Jun 2010 </td>         <td> 1,589,966 </td>     </tr>
-     <tr>     	<td> 04 Jul 2010 </td>         <td> 1,604,912 </td>     </tr>
-     <tr>     	<td> 11 Jul 2010 </td>         <td> 1,622,224 </td>     </tr>
-     <tr>     	<td> 18 Jul 2010 </td>         <td> 1,641,369 </td>     </tr>
-     <tr>     	<td> 25 Jul 2010 </td>         <td> 1,662,280 </td>     </tr>
-     <tr>     	<td> 01 Aug 2010 </td>         <td> 1,690,772 </td>     </tr>
+     <tr>     	<td> 09 Jul 2006 </td>         <td> 10174 </td>     </tr>
+     <tr>     	<td> 16 Jul 2006 </td>         <td> 11144 </td>     </tr>
+     <tr>     	<td> 23 Jul 2006 </td>         <td> 11895 </td>     </tr>
+     <tr>     	<td> 30 Jul 2006 </td>         <td> 13108 </td>     </tr>
+     <tr>     	<td> 06 Aug 2006 </td>         <td> 14356 </td>     </tr>
+     <tr>     	<td> 13 Aug 2006 </td>         <td> 15071 </td>     </tr>
+     <tr>     	<td> 20 Aug 2006 </td>         <td> 15751 </td>     </tr>
+     <tr>     	<td> 27 Aug 2006 </td>         <td> 16876 </td>     </tr>
+     <tr>     	<td> 03 Sep 2006 </td>         <td> 17556 </td>     </tr>
+     <tr>     	<td> 10 Sep 2006 </td>         <td> 18326 </td>     </tr>
+     <tr>     	<td> 17 Sep 2006 </td>         <td> 19108 </td>     </tr>
+     <tr>     	<td> 24 Sep 2006 </td>         <td> 19985 </td>     </tr>
+     <tr>     	<td> 01 Oct 2006 </td>         <td> 21256 </td>     </tr>
+     <tr>     	<td> 08 Oct 2006 </td>         <td> 22797 </td>     </tr>
+     <tr>     	<td> 15 Oct 2006 </td>         <td> 23997 </td>     </tr>
+     <tr>     	<td> 22 Oct 2006 </td>         <td> 25050 </td>     </tr>
+     <tr>     	<td> 29 Oct 2006 </td>         <td> 26256 </td>     </tr>
+     <tr>     	<td> 05 Nov 2006 </td>         <td> 27106 </td>     </tr>
+     <tr>     	<td> 12 Nov 2006 </td>         <td> 28191 </td>     </tr>
+     <tr>     	<td> 19 Nov 2006 </td>         <td> 31124 </td>     </tr>
+     <tr>     	<td> 26 Nov 2006 </td>         <td> 32330 </td>     </tr>
+     <tr>     	<td> 03 Dec 2006 </td>         <td> 33279 </td>     </tr>
+     <tr>     	<td> 10 Dec 2006 </td>         <td> 34643 </td>     </tr>
+     <tr>     	<td> 17 Dec 2006 </td>         <td> 35824 </td>     </tr>
+     <tr>     	<td> 24 Dec 2006 </td>         <td> 37037 </td>     </tr>
+     <tr>     	<td> 31 Dec 2006 </td>         <td> 37952 </td>     </tr>
+     <tr>     	<td> 07 Jan 2007 </td>         <td> 39853 </td>     </tr>
+     <tr>     	<td> 14 Jan 2007 </td>         <td> 41910 </td>     </tr>
+     <tr>     	<td> 21 Jan 2007 </td>         <td> 44183 </td>     </tr>
+     <tr>     	<td> 28 Jan 2007 </td>         <td> 47308 </td>     </tr>
+     <tr>     	<td> 04 Feb 2007 </td>         <td> 50371 </td>     </tr>
+     <tr>     	<td> 11 Feb 2007 </td>         <td> 53847 </td>     </tr>
+     <tr>     	<td> 18 Feb 2007 </td>         <td> 56053 </td>     </tr>
+     <tr>     	<td> 25 Feb 2007 </td>         <td> 58670 </td>     </tr>
+     <tr>     	<td> 04 Mar 2007 </td>         <td> 61463 </td>     </tr>
+     <tr>     	<td> 11 Mar 2007 </td>         <td> 64145 </td>     </tr>
+     <tr>     	<td> 18 Mar 2007 </td>         <td> 66348 </td>     </tr>
+     <tr>     	<td> 25 Mar 2007 </td>         <td> 70559 </td>     </tr>
+     <tr>     	<td> 01 Apr 2007 </td>         <td> 74381 </td>     </tr>
+     <tr>     	<td> 08 Apr 2007 </td>         <td> 79104 </td>     </tr>
+     <tr>     	<td> 15 Apr 2007 </td>         <td> 85607 </td>     </tr>
+     <tr>     	<td> 22 Apr 2007 </td>         <td> 89423 </td>     </tr>
+     <tr>     	<td> 29 Apr 2007 </td>         <td> 93085 </td>     </tr>
+     <tr>     	<td> 06 May 2007 </td>         <td> 96158 </td>     </tr>
+     <tr>     	<td> 13 May 2007 </td>         <td> 99792 </td>     </tr>
+     <tr>     	<td> 20 May 2007 </td>         <td> 103237 </td>     </tr>
+     <tr>     	<td> 27 May 2007 </td>         <td> 106559 </td>     </tr>
+     <tr>     	<td> 03 Jun 2007 </td>         <td> 111874 </td>     </tr>
+     <tr>     	<td> 10 Jun 2007 </td>         <td> 116306 </td>     </tr>
+     <tr>     	<td> 17 Jun 2007 </td>         <td> 120275 </td>     </tr>
+     <tr>     	<td> 24 Jun 2007 </td>         <td> 124169 </td>     </tr>
+     <tr>     	<td> 01 Jul 2007 </td>         <td> 127551 </td>     </tr>
+     <tr>     	<td> 08 Jul 2007 </td>         <td> 130879 </td>     </tr>
+     <tr>     	<td> 15 Jul 2007 </td>         <td> 137106 </td>     </tr>
+     <tr>     	<td> 22 Jul 2007 </td>         <td> 142025 </td>     </tr>
+     <tr>     	<td> 29 Jul 2007 </td>         <td> 145457 </td>     </tr>
+     <tr>     	<td> 05 Aug 2007 </td>         <td> 148992 </td>     </tr>
+     <tr>     	<td> 12 Aug 2007 </td>         <td> 152455 </td>     </tr>
+     <tr>     	<td> 19 Aug 2007 </td>         <td> 155412 </td>     </tr>
+     <tr>     	<td> 26 Aug 2007 </td>         <td> 158501 </td>     </tr>
+     <tr>     	<td> 02 Sep 2007 </td>         <td> 161903 </td>     </tr>
+     <tr>     	<td> 09 Sep 2007 </td>         <td> 165023 </td>     </tr>
+     <tr>     	<td> 16 Sep 2007 </td>         <td> 167679 </td>     </tr>
+     <tr>     	<td> 23 Sep 2007 </td>         <td> 170589 </td>     </tr>
+     <tr>     	<td> 30 Sep 2007 </td>         <td> 173365 </td>     </tr>
+     <tr>     	<td> 07 Oct 2007 </td>         <td> 175885 </td>     </tr>
+     <tr>     	<td> 14 Oct 2007 </td>         <td> 178164 </td>     </tr>
+     <tr>     	<td> 21 Oct 2007 </td>         <td> 180894 </td>     </tr>
+     <tr>     	<td> 28 Oct 2007 </td>         <td> 183890 </td>     </tr>
+     <tr>     	<td> 04 Nov 2007 </td>         <td> 187091 </td>     </tr>
+     <tr>     	<td> 11 Nov 2007 </td>         <td> 190175 </td>     </tr>
+     <tr>     	<td> 18 Nov 2007 </td>         <td> 194001 </td>     </tr>
+     <tr>     	<td> 25 Nov 2007 </td>         <td> 198470 </td>     </tr>
+     <tr>     	<td> 02 Dec 2007 </td>         <td> 202190 </td>     </tr>
+     <tr>     	<td> 09 Dec 2007 </td>         <td> 206029 </td>     </tr>
+     <tr>     	<td> 16 Dec 2007 </td>         <td> 210313 </td>     </tr>
+     <tr>     	<td> 23 Dec 2007 </td>         <td> 214478 </td>     </tr>
+     <tr>     	<td> 30 Dec 2007 </td>         <td> 218541 </td>     </tr>
+     <tr>     	<td> 06 Jan 2008 </td>         <td> 222425 </td>     </tr>
+     <tr>     	<td> 13 Jan 2008 </td>         <td> 228517 </td>     </tr>
+     <tr>     	<td> 20 Jan 2008 </td>         <td> 234098 </td>     </tr>
+     <tr>     	<td> 27 Jan 2008 </td>         <td> 239288 </td>     </tr>
+     <tr>     	<td> 03 Feb 2008 </td>         <td> 245841 </td>     </tr>
+     <tr>     	<td> 10 Feb 2008 </td>         <td> 253118 </td>     </tr>
+     <tr>     	<td> 17 Feb 2008 </td>         <td> 258544 </td>     </tr>
+     <tr>     	<td> 24 Feb 2008 </td>         <td> 267842 </td>     </tr>
+     <tr>     	<td> 02 Mar 2008 </td>         <td> 273628 </td>     </tr>
+     <tr>     	<td> 09 Mar 2008 </td>         <td> 282155 </td>     </tr>
+     <tr>     	<td> 16 Mar 2008 </td>         <td> 289636 </td>     </tr>
+     <tr>     	<td> 23 Mar 2008 </td>         <td> 296642 </td>     </tr>
+     <tr>     	<td> 30 Mar 2008 </td>         <td> 307538 </td>     </tr>
+     <tr>     	<td> 06 Apr 2008 </td>         <td> 315504 </td>     </tr>
+     <tr>     	<td> 13 Apr 2008 </td>         <td> 323892 </td>     </tr>
+     <tr>     	<td> 20 Apr 2008 </td>         <td> 332364 </td>     </tr>
+     <tr>     	<td> 27 Apr 2008 </td>         <td> 340850 </td>     </tr>
+     <tr>     	<td> 04 May 2008 </td>         <td> 347788 </td>     </tr>
+     <tr>     	<td> 11 May 2008 </td>         <td> 357316 </td>     </tr>
+     <tr>     	<td> 18 May 2008 </td>         <td> 365111 </td>     </tr>
+     <tr>     	<td> 25 May 2008 </td>         <td> 369862 </td>     </tr>
+     <tr>     	<td> 01 Jun 2008 </td>         <td> 378147 </td>     </tr>
+     <tr>     	<td> 08 Jun 2008 </td>         <td> 385008 </td>     </tr>
+     <tr>     	<td> 15 Jun 2008 </td>         <td> 392229 </td>     </tr>
+     <tr>     	<td> 22 Jun 2008 </td>         <td> 401350 </td>     </tr>
+     <tr>     	<td> 29 Jun 2008 </td>         <td> 410641 </td>     </tr>
+     <tr>     	<td> 06 Jul 2008 </td>         <td> 419541 </td>     </tr>
+     <tr>     	<td> 13 Jul 2008 </td>         <td> 427526 </td>     </tr>
+     <tr>     	<td> 20 Jul 2008 </td>         <td> 435256 </td>     </tr>
+     <tr>     	<td> 27 Jul 2008 </td>         <td> 445084 </td>     </tr>
+     <tr>     	<td> 03 Aug 2008 </td>         <td> 458026 </td>     </tr>
+     <tr>     	<td> 10 Aug 2008 </td>         <td> 468478 </td>     </tr>
+     <tr>     	<td> 17 Aug 2008 </td>         <td> 477351 </td>     </tr>
+     <tr>     	<td> 24 Aug 2008 </td>         <td> 489268 </td>     </tr>
+     <tr>     	<td> 31 Aug 2008 </td>         <td> 499500 </td>     </tr>
+     <tr>     	<td> 07 Sep 2008 </td>         <td> 508311 </td>     </tr>
+     <tr>     	<td> 14 Sep 2008 </td>         <td> 515415 </td>     </tr>
+     <tr>     	<td> 21 Sep 2008 </td>         <td> 525240 </td>     </tr>
+     <tr>     	<td> 28 Sep 2008 </td>         <td> 538249 </td>     </tr>
+     <tr>     	<td> 05 Oct 2008 </td>         <td> 550019 </td>     </tr>
+     <tr>     	<td> 12 Oct 2008 </td>         <td> 563005 </td>     </tr>
+     <tr>     	<td> 19 Oct 2008 </td>         <td> 571729 </td>     </tr>
+     <tr>     	<td> 26 Oct 2008 </td>         <td> 578727 </td>     </tr>
+     <tr>     	<td> 02 Nov 2008 </td>         <td> 585113 </td>     </tr>
+     <tr>     	<td> 09 Nov 2008 </td>         <td> 591933 </td>     </tr>
+     <tr>     	<td> 16 Nov 2008 </td>         <td> 597958 </td>     </tr>
+     <tr>     	<td> 23 Nov 2008 </td>         <td> 605926 </td>     </tr>
+     <tr>     	<td> 30 Nov 2008 </td>         <td> 616196 </td>     </tr>
+     <tr>     	<td> 07 Dec 2008 </td>         <td> 623497 </td>     </tr>
+     <tr>     	<td> 14 Dec 2008 </td>         <td> 632844 </td>     </tr>
+     <tr>     	<td> 21 Dec 2008 </td>         <td> 644072 </td>     </tr>
+     <tr>     	<td> 28 Dec 2008 </td>         <td> 655190 </td>     </tr>
+     <tr>     	<td> 04 Jan 2009 </td>         <td> 666933 </td>     </tr>
+     <tr>     	<td> 11 Jan 2009 </td>         <td> 674083 </td>     </tr>
+     <tr>     	<td> 18 Jan 2009 </td>         <td> 682148 </td>     </tr>
+     <tr>     	<td> 25 Jan 2009 </td>         <td> 691956 </td>     </tr>
+     <tr>     	<td> 01 Feb 2009 </td>         <td> 699010 </td>     </tr>
+     <tr>     	<td> 08 Feb 2009 </td>         <td> 706130 </td>     </tr>
+     <tr>     	<td> 15 Feb 2009 </td>         <td> 713249 </td>     </tr>
+     <tr>     	<td> 22 Feb 2009 </td>         <td> 722033 </td>     </tr>
+     <tr>     	<td> 01 Mar 2009 </td>         <td> 732727 </td>     </tr>
+     <tr>     	<td> 08 Mar 2009 </td>         <td> 739681 </td>     </tr>
+     <tr>     	<td> 15 Mar 2009 </td>         <td> 748509 </td>     </tr>
+     <tr>     	<td> 22 Mar 2009 </td>         <td> 757153 </td>     </tr>
+     <tr>     	<td> 29 Mar 2009 </td>         <td> 764735 </td>     </tr>
+     <tr>     	<td> 05 Apr 2009 </td>         <td> 772629 </td>     </tr>
+     <tr>     	<td> 12 Apr 2009 </td>         <td> 781176 </td>     </tr>
+     <tr>     	<td> 19 Apr 2009 </td>         <td> 791395 </td>     </tr>
+     <tr>     	<td> 26 Apr 2009 </td>         <td> 800568 </td>     </tr>
+     <tr>     	<td> 03 May 2009 </td>         <td> 809702 </td>     </tr>
+     <tr>     	<td> 10 May 2009 </td>         <td> 815996 </td>     </tr>
+     <tr>     	<td> 17 May 2009 </td>         <td> 826261 </td>     </tr>
+     <tr>     	<td> 24 May 2009 </td>         <td> 832672 </td>     </tr>
+     <tr>     	<td> 31 May 2009 </td>         <td> 839951 </td>     </tr>
+     <tr>     	<td> 07 Jun 2009 </td>         <td> 849769 </td>     </tr>
+     <tr>     	<td> 14 Jun 2009 </td>         <td> 863398 </td>     </tr>
+     <tr>     	<td> 21 Jun 2009 </td>         <td> 874936 </td>     </tr>
+     <tr>     	<td> 28 Jun 2009 </td>         <td> 886266 </td>     </tr>
+     <tr>     	<td> 05 Jul 2009 </td>         <td> 897568 </td>     </tr>
+     <tr>     	<td> 12 Jul 2009 </td>         <td> 903538 </td>     </tr>
+     <tr>     	<td> 19 Jul 2009 </td>         <td> 921617 </td>     </tr>
+     <tr>     	<td> 26 Jul 2009 </td>         <td> 931614 </td>     </tr>
+     <tr>     	<td> 02 Aug 2009 </td>         <td> 943032 </td>     </tr>
+     <tr>     	<td> 09 Aug 2009 </td>         <td> 953414 </td>     </tr>
+     <tr>     	<td> 16 Aug 2009 </td>         <td> 965104 </td>     </tr>
+     <tr>     	<td> 23 Aug 2009 </td>         <td> 991650 </td>     </tr>
+     <tr>     	<td> 30 Aug 2009 </td>         <td> 1015483 </td>     </tr>
+     <tr>     	<td> 06 Sep 2009 </td>         <td> 1038081 </td>     </tr>
+     <tr>     	<td> 13 Sep 2009 </td>         <td> 1055267 </td>     </tr>
+     <tr>     	<td> 20 Sep 2009 </td>         <td> 1065152 </td>     </tr>
+     <tr>     	<td> 27 Sep 2009 </td>         <td> 1077306 </td>     </tr>
+     <tr>     	<td> 04 Oct 2009 </td>         <td> 1087512 </td>     </tr>
+     <tr>     	<td> 11 Oct 2009 </td>         <td> 1098034 </td>     </tr>
+     <tr>     	<td> 18 Oct 2009 </td>         <td> 1109497 </td>     </tr>
+     <tr>     	<td> 25 Oct 2009 </td>         <td> 1117923 </td>     </tr>
+     <tr>     	<td> 01 Nov 2009 </td>         <td> 1128098 </td>     </tr>
+     <tr>     	<td> 08 Nov 2009 </td>         <td> 1138463 </td>     </tr>
+     <tr>     	<td> 15 Nov 2009 </td>         <td> 1147036 </td>     </tr>
+     <tr>     	<td> 22 Nov 2009 </td>         <td> 1156270 </td>     </tr>
+     <tr>     	<td> 29 Nov 2009 </td>         <td> 1165247 </td>     </tr>
+     <tr>     	<td> 06 Dec 2009 </td>         <td> 1174547 </td>     </tr>
+     <tr>     	<td> 13 Dec 2009 </td>         <td> 1184640 </td>     </tr>
+     <tr>     	<td> 20 Dec 2009 </td>         <td> 1200702 </td>     </tr>
+     <tr>     	<td> 27 Dec 2009 </td>         <td> 1215566 </td>     </tr>
+     <tr>     	<td> 03 Jan 2010 </td>         <td> 1231747 </td>     </tr>
+     <tr>     	<td> 10 Jan 2010 </td>         <td> 1243376 </td>     </tr>
+     <tr>     	<td> 17 Jan 2010 </td>         <td> 1256227 </td>     </tr>
+     <tr>     	<td> 24 Jan 2010 </td>         <td> 1271278 </td>     </tr>
+     <tr>     	<td> 31 Jan 2010 </td>         <td> 1283078 </td>     </tr>
+     <tr>     	<td> 07 Feb 2010 </td>         <td> 1294028 </td>     </tr>
+     <tr>     	<td> 14 Feb 2010 </td>         <td> 1304635 </td>     </tr>
+     <tr>     	<td> 21 Feb 2010 </td>         <td> 1316026 </td>     </tr>
+     <tr>     	<td> 28 Feb 2010 </td>         <td> 1329281 </td>     </tr>
+     <tr>     	<td> 07 Mar 2010 </td>         <td> 1339441 </td>     </tr>
+     <tr>     	<td> 14 Mar 2010 </td>         <td> 1350091 </td>     </tr>
+     <tr>     	<td> 21 Mar 2010 </td>         <td> 1363516 </td>     </tr>
+     <tr>     	<td> 28 Mar 2010 </td>         <td> 1379005 </td>     </tr>
+     <tr>     	<td> 04 Apr 2010 </td>         <td> 1396502 </td>     </tr>
+     <tr>     	<td> 11 Apr 2010 </td>         <td> 1412765 </td>     </tr>
+     <tr>     	<td> 18 Apr 2010 </td>         <td> 1426915 </td>     </tr>
+     <tr>     	<td> 25 Apr 2010 </td>         <td> 1441097 </td>     </tr>
+     <tr>     	<td> 02 May 2010 </td>         <td> 1455660 </td>     </tr>
+     <tr>     	<td> 09 May 2010 </td>         <td> 1469848 </td>     </tr>
+     <tr>     	<td> 16 May 2010 </td>         <td> 1483686 </td>     </tr>
+     <tr>     	<td> 23 May 2010 </td>         <td> 1498843 </td>     </tr>
+     <tr>     	<td> 30 May 2010 </td>         <td> 1518772 </td>     </tr>
+     <tr>     	<td> 06 Jun 2010 </td>         <td> 1538428 </td>     </tr>
+     <tr>     	<td> 13 Jun 2010 </td>         <td> 1559246 </td>     </tr>
+     <tr>     	<td> 20 Jun 2010 </td>         <td> 1574055 </td>     </tr>
+     <tr>     	<td> 27 Jun 2010 </td>         <td> 1589966 </td>     </tr>
+     <tr>     	<td> 04 Jul 2010 </td>         <td> 1604912 </td>     </tr>
+     <tr>     	<td> 11 Jul 2010 </td>         <td> 1622224 </td>     </tr>
+     <tr>     	<td> 18 Jul 2010 </td>         <td> 1641369 </td>     </tr>
+     <tr>     	<td> 25 Jul 2010 </td>         <td> 1662280 </td>     </tr>
+     <tr>     	<td> 01 Aug 2010 </td>         <td> 1690772 </td>     </tr>
 </table>
+<br>
+<div id="graph" style="width: 600px; height: 400px;"></div>
 
+<script>
+function convertTableToGraph(tableId, graphId, options = {}) {
+
+    const table = document.getElementById(tableId);
+
+    if (!table) {
+        console.error(`table id '${tableId}' not found`);
+        return;
+    }
+
+
+    const headers = [];
+    const rows = table.querySelectorAll('tr');
+    const labels = [];
+    const data = [];
+
+
+    for (let i = 1; i < rows.length; i++) {
+        const cells = rows[i].querySelectorAll('td');
+        if (cells.length < 2) continue;
+
+        labels.push(cells[0].textContent.trim());
+        data.push(parseFloat(cells[1].textContent.trim()));
+    }
+
+    const chartOptions = {
+        type: options.type || 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: options.label || table.querySelector('th:nth-child(2)').textContent,
+                data: data,
+                borderColor: options.borderColor || 'rgb(75, 192, 192)',
+                tension: 0.1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: options.title || 'data visualization'
+                }
+            }
+        }
+    };
+    const graphContainer = document.getElementById(graphId);
+    const canvas = document.createElement('canvas');
+    graphContainer.innerHTML = '';
+    graphContainer.appendChild(canvas);
+
+    new Chart(canvas, chartOptions);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    convertTableToGraph('dataTable', 'graph', {
+        type: 'line',
+        title: 'Subscriber Growth',
+        label: 'Number of Subscribers'
+    });
+});
+</script>
 </body>
 </html>
 
