@@ -1,36 +1,44 @@
 <!DOCTYPE html>
-<html>
-<head>
-<title>Data</title>
-<link rel="stylesheet" href="style.css">
-</head>
-<body>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Data</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
     <div class="top-bar">
-        <div class="logo-container">
-            <img src="logo.png" alt="Logo" class="logo">
-        </div>
-        <nav class="navigation">
-            <a href="index.html" class="nav-link">Home</a>
-            <a href="data.html" class="nav-link">Data</a>
-        </nav>
+      <div class="logo-container">
+        <img src="logo.png" alt="Logo" class="logo" />
+      </div>
+      <nav class="navigation">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="data.html" class="nav-link">Data</a>
+      </nav>
     </div>
-<h1>.</h1>
-<h1>Data page beta</h1>
 
-<br>
-	<button id="183" class="float-left submit-button">183Club</button>
-    <button id="smosh" class="float-left submit-button">Smosh</button>
-<script type="text/javascript">
-    document.getElementById("183").onclick = function () {
+    <div class="content">
+      <div class="hero">
+        <h1>Data Page Beta</h1>
+      </div>
+
+      <div class="data-section">
+        <h2>Explore Data</h2>
+        <div class="button-container">
+          <button id="183" class="styled-button">183Club</button>
+          <button id="smosh" class="styled-button">Smosh</button>
+        </div>
+      </div>
+    </div>
+
+    <script type="text/javascript">
+      document.getElementById("183").onclick = function () {
         location.href = "https://azaistats.github.io/data/183club.html";
-    };
+      };
 
-
-    document.getElementById("smosh").onclick = function () {
+      document.getElementById("smosh").onclick = function () {
         location.href = "https://azaistats.github.io/data/smosh.html";
-    };
-</script>
-</body>
+      };
+    </script>
+  </body>
 </html>
-
-

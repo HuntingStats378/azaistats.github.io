@@ -1,119 +1,222 @@
 <!DOCTYPE html>
-<html>
-<head>
-<title>AzaiStats | 183Club</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<link rel="stylesheet" href="../style.css">
-</head>
-<body>
-    <div class="top-bar">
-        <div class="logo-container">
-            <img src="../logo.png" alt="Logo" class="logo">
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AzaiStats | 183 Club</title>
+    <link rel="stylesheet" href="../style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+    <header class="top-bar">
+      <div class="logo-container">
+        <img src="../logo.png" alt="AzaiStats Logo" class="logo" />
+      </div>
+      <nav class="navigation">
+        <a href="../index.html" class="nav-link">Home</a>
+        <a href="../data" class="nav-link">Data</a>
+      </nav>
+    </header>
+
+    <main class="content">
+      <section class="hero">
+        <h1>183Club Subscriber Growth</h1>
+        <p>Tracking data since <strong>23 Oct 2005</strong>.</p>
+      </section>
+
+      <section class="data-section">
+        <h2>Subscriber Data</h2>
+        <div class="table-container">
+          <table id="dataTable">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Subscribers</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
         </div>
-        <nav class="navigation">
-            <a href="../index.html" class="nav-link">Home</a>
-            <a href="../data" class="nav-link">Data</a>
-        </nav>
-    </div>
-<h1> 183Club </h1>
-<h4> Data starting from 23 Oct 2005 </h4>
-<table id="dataTable">
-	<tr>
-    <th> Date </th>
-    <th> Subscribers </th>
-     </tr>     <tr>     	<td> 23 Oct 2005 </td>         <td> 0 </td>     <tr>     	<td> 30 Oct 2005 </td>         <td> 2 </td>     <tr>     	<td> 06 Nov 2005 </td>         <td> 4 </td>     <tr>     	<td> 13 Nov 2005 </td>         <td> 7 </td>     <tr>     	<td> 20 Nov 2005 </td>         <td> 7 </td>     <tr>     	<td> 27 Nov 2005 </td>         <td> 6 </td>     <tr>     	<td> 04 Dec 2005 </td>         <td> 9 </td>     <tr>     	<td> 11 Dec 2005 </td>         <td> 10 </td>     <tr>     	<td> 18 Dec 2005 </td>         <td> 9 </td>     <tr>     	<td> 25 Dec 2005 </td>         <td> 12 </td>     </tr>     <tr>     	<td> 01 Jan 2006 </td>         <td> 15 </td>     </tr>
-     <tr>     	<td> 08 Jan 2006 </td>         <td> 17 </td>     </tr>
-     <tr>     	<td> 15 Jan 2006 </td>         <td> 21 </td>     </tr>
-     <tr>     	<td> 22 Jan 2006 </td>         <td> 20 </td>     </tr>
-     <tr>     	<td> 29 Jan 2006 </td>         <td> 28 </td>     </tr>
-     <tr>     	<td> 05 Feb 2006 </td>         <td> 36 </td>     </tr>
-     <tr>     	<td> 12 Feb 2006 </td>         <td> 42 </td>     </tr>
-     <tr>     	<td> 19 Feb 2006 </td>         <td> 43 </td>     </tr>
-     <tr>     	<td> 26 Feb 2006 </td>         <td> 51 </td>     </tr>
-     <tr>     	<td> 05 Mar 2006 </td>         <td> 63 </td>     </tr>
-     <tr>     	<td> 12 Mar 2006 </td>         <td> 79 </td>     </tr>
-     <tr>     	<td> 19 Mar 2006 </td>         <td> 92 </td>     </tr>
-     <tr>     	<td> 26 Mar 2006 </td>         <td> 119 </td>     </tr>
-     <tr>     	<td> 02 Apr 2006 </td>         <td> 148 </td>     </tr>
-     <tr>     	<td> 09 Apr 2006 </td>         <td> 191 </td>     </tr>
-     <tr>     	<td> 16 Apr 2006 </td>         <td> 203 </td>     </tr>
-     <tr>     	<td> 23 Apr 2006 </td>         <td> 224 </td>     </tr>
-     <tr>     	<td> 30 Apr 2006 </td>         <td> 233 </td>     </tr>
-     <tr>     	<td> 07 May 2006 </td>         <td> 276 </td>     </tr>
-     <tr>     	<td> 14 May 2006 </td>         <td> 377 </td>     </tr>
-     <tr>     	<td> 21 May 2006 </td>         <td> 538 </td>     </tr>
-     <tr>     	<td> 28 May 2006 </td>         <td> 672 </td>     </tr>
-     <tr>     	<td> 04 Jun 2006 </td>         <td> 834 </td>     </tr>
-     <tr>     	<td> 11 Jun 2006 </td>         <td> 1076 </td>     </tr>
-     <tr>     	<td> 18 Jun 2006 </td>         <td> 0 </td>     </tr>
-</table>
-<br>
-<div id="graph" style="width: 600px; height: 400px;"></div>
+      </section>
 
-<script>
-function convertTableToGraph(tableId, graphId, options = {}) {
+      <section class="graph-section">
+        <h2>Data Visualization</h2>
+        <div id="graph" class="graph-container"></div>
+      </section>
+    </main>
 
-    const table = document.getElementById(tableId);
+    <script>
+      const data = [
+        { date: "23 Oct 2005", subscribers: 0 },
+        { date: "30 Oct 2005", subscribers: 2 },
+        { date: "06 Nov 2005", subscribers: 4 },
+        { date: "13 Nov 2005", subscribers: 7 },
+        { date: "20 Nov 2005", subscribers: 7 },
+        { date: "27 Nov 2005", subscribers: 6 },
+        { date: "04 Dec 2005", subscribers: 9 },
+        { date: "11 Dec 2005", subscribers: 10 },
+        { date: "18 Dec 2005", subscribers: 9 },
+        { date: "25 Dec 2005", subscribers: 12 },
+        { date: "01 Jan 2006", subscribers: 15 },
+        { date: "08 Jan 2006", subscribers: 17 },
+        { date: "15 Jan 2006", subscribers: 21 },
+        { date: "22 Jan 2006", subscribers: 20 },
+        { date: "29 Jan 2006", subscribers: 28 },
+        { date: "05 Feb 2006", subscribers: 36 },
+        { date: "12 Feb 2006", subscribers: 42 },
+        { date: "19 Feb 2006", subscribers: 43 },
+        { date: "26 Feb 2006", subscribers: 51 },
+        { date: "05 Mar 2006", subscribers: 63 },
+        { date: "12 Mar 2006", subscribers: 79 },
+        { date: "19 Mar 2006", subscribers: 92 },
+        { date: "26 Mar 2006", subscribers: 119 },
+        { date: "02 Apr 2006", subscribers: 148 },
+        { date: "09 Apr 2006", subscribers: 191 },
+        { date: "16 Apr 2006", subscribers: 203 },
+        { date: "23 Apr 2006", subscribers: 224 },
+        { date: "30 Apr 2006", subscribers: 233 },
+        { date: "07 May 2006", subscribers: 276 },
+        { date: "14 May 2006", subscribers: 377 },
+        { date: "21 May 2006", subscribers: 538 },
+        { date: "28 May 2006", subscribers: 672 },
+        { date: "04 Jun 2006", subscribers: 834 },
+        { date: "11 Jun 2006", subscribers: 1076 },
+        { date: "18 Jun 2006", subscribers: 0 },
+      ];
 
-    if (!table) {
-        console.error(`table id '${tableId}' not found`);
-        return;
-    }
+      function populateTable() {
+        const tableBody = document.querySelector("#dataTable tbody");
 
+        tableBody.innerHTML = "";
 
-    const headers = [];
-    const rows = table.querySelectorAll('tr');
-    const labels = [];
-    const data = [];
+        data.forEach((row, index) => {
+          const tr = document.createElement("tr");
+          tr.className = index % 2 === 0 ? "even-row" : "odd-row";
+          tr.innerHTML = `<td>${
+            row.date
+          }</td><td>${row.subscribers.toLocaleString()}</td>`;
+          tableBody.appendChild(tr);
+        });
+      }
 
+      function createChart() {
+        const labels = data.map((row) => row.date);
+        const subscribers = data.map((row) => row.subscribers);
 
-    for (let i = 1; i < rows.length; i++) {
-        const cells = rows[i].querySelectorAll('td');
-        if (cells.length < 2) continue;
+        const graphContainer = document.getElementById("graph");
+        const canvas = document.createElement("canvas");
+        graphContainer.innerHTML = "";
+        graphContainer.appendChild(canvas);
 
-        labels.push(cells[0].textContent.trim());
-        data.push(parseFloat(cells[1].textContent.trim()));
-    }
+        const ctx = canvas.getContext("2d");
 
-    const chartOptions = {
-        type: options.type || 'line',
-        data: {
+        const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+        gradient.addColorStop(0, "rgba(137, 180, 250, 0.5)");
+        gradient.addColorStop(1, "rgba(137, 180, 250, 0)");
+
+        new Chart(ctx, {
+          type: "line",
+          data: {
             labels: labels,
-            datasets: [{
-                label: options.label || table.querySelector('th:nth-child(2)').textContent,
-                data: data,
-                borderColor: options.borderColor || 'rgb(75, 192, 192)',
-                tension: 0.1
-            }]
-        },
-        options: {
+            datasets: [
+              {
+                label: "Subscribers Over Time",
+                data: subscribers,
+                borderColor: "#89b4fa",
+                backgroundColor: gradient,
+                borderWidth: 2,
+                tension: 0.4,
+                pointRadius: 4,
+                pointHoverRadius: 6,
+                pointBackgroundColor: "#b4befe",
+                pointHoverBackgroundColor: "#cdd6f4",
+              },
+            ],
+          },
+          options: {
             responsive: true,
+            maintainAspectRatio: false,
             plugins: {
+              title: {
+                display: true,
+                text: "183 Club Subscriber Growth",
+                color: "#cdd6f4",
+                font: {
+                  size: 18,
+                  family:
+                    "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
+                },
+              },
+              tooltip: {
+                backgroundColor: "#313244",
+                borderColor: "#45475a",
+                borderWidth: 1,
+                titleColor: "#cdd6f4",
+                bodyColor: "#a6adc8",
+                callbacks: {
+                  label: function (tooltipItem) {
+                    return `Subscribers: ${tooltipItem.raw.toLocaleString()}`;
+                  },
+                },
+              },
+              legend: {
+                display: true,
+                labels: {
+                  color: "#a6adc8",
+                  font: {
+                    size: 12,
+                  },
+                },
+              },
+            },
+            scales: {
+              x: {
                 title: {
-                    display: true,
-                    text: options.title || 'data visualization'
-                }
-            }
-        }
-    };
-    const graphContainer = document.getElementById(graphId);
-    const canvas = document.createElement('canvas');
-    graphContainer.innerHTML = '';
-    graphContainer.appendChild(canvas);
-
-    new Chart(canvas, chartOptions);
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-    convertTableToGraph('dataTable', 'graph', {
-        type: 'line',
-        title: 'Subscribers',
-        label: ''
-    });
-});
-</script>
-</body>
+                  display: true,
+                  text: "Date",
+                  color: "#cdd6f4",
+                },
+                ticks: {
+                  maxTicksLimit: 10,
+                  color: "#a6adc8",
+                },
+                grid: {
+                  color: "rgba(69, 71, 90, 0.2)",
+                },
+              },
+              y: {
+                title: {
+                  display: true,
+                  text: "Subscribers",
+                  color: "#cdd6f4",
+                },
+                ticks: {
+                  callback: (value) => value.toLocaleString(),
+                  color: "#a6adc8",
+                },
+                grid: {
+                  color: "rgba(69, 71, 90, 0.2)",
+                },
+              },
+            },
+            elements: {
+              point: {
+                backgroundColor: "#89b4fa",
+                borderColor: "#b4befe",
+                borderWidth: 2,
+              },
+            },
+            hover: {
+              mode: "nearest",
+              intersect: true,
+            },
+          },
+        });
+      }
+      document.addEventListener("DOMContentLoaded", () => {
+        populateTable();
+        createChart();
+      });
+    </script>
+  </body>
 </html>
-
-
-
