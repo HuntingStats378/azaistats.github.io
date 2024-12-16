@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AzaiStats | 183 Club</title>
+    <link rel="stylesheet" href="../style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+    <header class="top-bar">
+      <div class="logo-container">
+        <img src="../logo.png" alt="AzaiStats Logo" class="logo" />
+      </div>
+      <nav class="navigation">
+        <a href="../index.html" class="nav-link">Home</a>
+        <a href="../data" class="nav-link">Data</a>
+      </nav>
+    </header>
+
+    <main class="content">
+      <section class="hero">
+        <h1>wantlieswiththat Subscriber Growth</h1>
+        <p>Tracking data since <strong>24 Sep 2006</strong>.</p>
+      </section>
+
+      <section class="data-section">
+        <h2>Subscriber Data</h2>
+        <div class="table-container">
+          <table id="dataTable">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Subscribers</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="graph-section">
+        <h2>Data Visualization</h2>
+        <div id="graph" class="graph-container"></div>
+      </section>
+    </main>
+
+    <script>
+      const data = [
+        { date: "24 Sep 2006", subscribers: 1 },
+        { date: "01 Oct 2006", subscribers: 1 },
+        { date: "08 Oct 2006", subscribers: 1 },
+        { date: "15 Oct 2006", subscribers: 1 },
+        { date: "22 Oct 2006", subscribers: 3 },
+        { date: "29 Oct 2006", subscribers: 17 },
+        { date: "05 Nov 2006", subscribers: 144 },
+        { date: "12 Nov 2006", subscribers: 1230 },
+        { date: "19 Nov 2006", subscribers: 6756 },
+        { date: "26 Nov 2006", subscribers: 13000 },
+        { date: "03 Dec 2006", subscribers: 16500 },
+        { date: "10 Dec 2006", subscribers: 16607 },
+        { date: "17 Dec 2006", subscribers: 16607 },
+        { date: "24 Dec 2006", subscribers: 16602 },
+        { date: "31 Dec 2006", subscribers: 16602 },
+        { date: "07 Jan 2007", subscribers: 16603 },
+        { date: "14 Jan 2007", subscribers: 16602 },
+        { date: "21 Jan 2007", subscribers: 16601 },
+        { date: "28 Jan 2007", subscribers: 16596 }
+      ];
+
+      function populateTable() {
+        const tableBody = document.querySelector("#dataTable tbody");
+
+        tableBody.innerHTML = "";
+
+        data.forEach((row, index) => {
+          const tr = document.createElement("tr");
+          tr.className = index % 2 === 0 ? "even-row" : "odd-row";
+          tr.innerHTML = `<td>${
+            row.date
+          }</td><td>${row.subscribers.toLocaleString()}</td>`;
+          tableBody.appendChild(tr);
+        });
+      }
+
+      function createChart() {
+        const labels = data.map((row) => row.date);
+        const subscribers = data.map((row) => row.subscribers);
+
+        const graphContainer = document.getElementById("graph");
+        const canvas = document.createElement("canvas");
+        graphContainer.innerHTML = "";
+        graphContainer.appendChild(canvas);
+
+        const ctx = canvas.getContext("2d");
+
+        const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+        gradient.addColorStop(0, "rgba(137, 180, 250, 0.5)");
+        gradient.addColorStop(1, "rgba(137, 180, 250, 0)");
+
+        new Chart(ctx, {
+          type: "line",
+          data: {
+            labels: labels,
+            datasets: [
+              {
+                label: "Subscribers Over Time",
+                data: subscribers,
+                borderColor: "#89b4fa",
+                backgroundColor: gradient,
+                borderWidth: 2,
+                tension: 0.4,
+                pointRadius: 4,
+                pointHoverRadius: 6,
+                pointBackgroundColor: "#b4befe",
+                pointHoverBackgroundColor: "#cdd6f4",
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              title: {
+                display: true,
+                text: "wantlieswiththat Subscriber Growth",
+                color: "#cdd6f4",
+                font: {
+                  size: 18,
+                  family:
+                    "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
+                },
+              },
+              tooltip: {
+                backgroundColor: "#313244",
+                borderColor: "#45475a",
+                borderWidth: 1,
+                titleColor: "#cdd6f4",
+                bodyColor: "#a6adc8",
+                callbacks: {
+                  label: function (tooltipItem) {
+                    return `Subscribers: ${tooltipItem.raw.toLocaleString()}`;
+                  },
+                },
+              },
+              legend: {
+                display: true,
+                labels: {
+                  color: "#a6adc8",
+                  font: {
+                    size: 12,
+                  },
+                },
+              },
+            },
+            scales: {
+              x: {
+                title: {
+                  display: true,
+                  text: "Date",
+                  color: "#cdd6f4",
+                },
+                ticks: {
+                  maxTicksLimit: 10,
+                  color: "#a6adc8",
+                },
+                grid: {
+                  color: "rgba(69, 71, 90, 0.2)",
+                },
+              },
+              y: {
+                title: {
+                  display: true,
+                  text: "Subscribers",
+                  color: "#cdd6f4",
+                },
+                ticks: {
+                  callback: (value) => value.toLocaleString(),
+                  color: "#a6adc8",
+                },
+                grid: {
+                  color: "rgba(69, 71, 90, 0.2)",
+                },
+              },
+            },
+            elements: {
+              point: {
+                backgroundColor: "#89b4fa",
+                borderColor: "#b4befe",
+                borderWidth: 2,
+              },
+            },
+            hover: {
+              mode: "nearest",
+              intersect: true,
+            },
+          },
+        });
+      }
+      document.addEventListener("DOMContentLoaded", () => {
+        populateTable();
+        createChart();
+      });
+    </script>
+  </body>
+</html>
