@@ -33,8 +33,7 @@ body {
 }
 
 .logo {
-  height: 55px;
-  filter: brightness(0.9) contrast(1.2);
+  height: 65px;
 }
 
 .navigation {
