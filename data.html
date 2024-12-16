@@ -32,13 +32,15 @@
     </div>
 
     <script type="text/javascript">
-      document.getElementById("183").onclick = function () {
-        location.href = "https://azaistats.github.io/data/183club.html";
-      };
+      document.addEventListener("DOMContentLoaded", function () {
+        document.getElementById("183").onclick = function () {
+            location.href = "data/183club.html";
+        };
 
-      document.getElementById("smosh").onclick = function () {
-        location.href = "https://azaistats.github.io/data/smosh.html";
-      };
+        document.getElementById("smosh").onclick = function () {
+            location.href = "data/smosh.html";
+        };
+      });
     </script>
   </body>
 </html>
