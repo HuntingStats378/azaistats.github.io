@@ -3,66 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YouTube Like Count Fetcher</title>
+    <title>BFDIA 17 Live Voting Results</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
         }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
+        .video {
+            margin-bottom: 20px;
         }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
+        .label {
+            font-weight: bold;
         }
-        th {
-            background-color: #f4f4f4;
+        .like-count {
+            font-size: 24px;
+            color: #333;
         }
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/odometer.js/0.4.8/themes/odometer-theme-default.min.css">
 </head>
 <body>
-    <h1>YouTube Like Count Fetcher</h1>
-    <table>
-        <thead>
-            <tr>
-                <th>Video ID</th>
-                <th>Label</th>
-                <th>Like Count</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>fRWPTnzHZKE</td>
-                <td>Needle</td>
-                <td id="like-fRWPTnzHZKE">Loading...</td>
-            </tr>
-            <tr>
-                <td>zeL0ueV_t5g</td>
-                <td>Tennis Ball</td>
-                <td id="like-zeL0ueV_t5g">Loading...</td>
-            </tr>
-            <tr>
-                <td>PebfN2U8Q9g</td>
-                <td>Nickel</td>
-                <td id="like-PebfN2U8Q9g">Loading...</td>
-            </tr>
-            <tr>
-                <td>CheLWDCi79M</td>
-                <td>Book</td>
-                <td id="like-CheLWDCi79M">Loading...</td>
-            </tr>
-            <tr>
-                <td>JCop65-cz9g</td>
-                <td>Fries</td>
-                <td id="like-JCop65-cz9g">Loading...</td>
-            </tr>
-        </tbody>
-    </table>
+    <h1>Live Results</h1>
+    <div id="videos">
+        <div class="video">
+            <span class="label">Needle:</span>
+            <span class="like-count odometer" id="like-fRWPTnzHZKE">0</span>
+        </div>
+        <div class="video">
+            <span class="label">Tennis Ball:</span>
+            <span class="like-count odometer" id="like-zeL0ueV_t5g">0</span>
+        </div>
+        <div class="video">
+            <span class="label">Nickel:</span>
+            <span class="like-count odometer" id="like-PebfN2U8Q9g">0</span>
+        </div>
+        <div class="video">
+            <span class="label">Book:</span>
+            <span class="like-count odometer" id="like-CheLWDCi79M">0</span>
+        </div>
+        <div class="video">
+            <span class="label">Fries:</span>
+            <span class="like-count odometer" id="like-JCop65-cz9g">0</span>
+        </div>
+    </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/odometer.js/0.4.8/odometer.min.js"></script>
     <script>
         const videoIds = [
             "fRWPTnzHZKE",
@@ -72,17 +57,23 @@
             "JCop65-cz9g"
         ];
 
+        function updateOdometer(element, value) {
+            element.innerHTML = value;
+        }
+
         function fetchLikeCounts() {
             videoIds.forEach(id => {
                 fetch(`https://api.socialcounts.org/youtube-video-live-view-count/${id}`)
                     .then(response => response.json())
                     .then(data => {
                         const likeCount = data.table.find(item => item.name === "Like Count").count;
-                        document.getElementById(`like-${id}`).textContent = likeCount;
+                        const element = document.getElementById(`like-${id}`);
+                        updateOdometer(element, likeCount);
                     })
                     .catch(error => {
                         console.error(`Error fetching data for video ID ${id}:`, error);
-                        document.getElementById(`like-${id}`).textContent = "Error";
+                        const element = document.getElementById(`like-${id}`);
+                        element.innerHTML = "Error";
                     });
             });
         }
@@ -91,7 +82,7 @@
         fetchLikeCounts();
 
         // Fetch every 10 seconds
-        setInterval(fetchLikeCounts, 10000);
+        setInterval(fetchLikeCounts, 2000);
     </script>
 </body>
 </html>
