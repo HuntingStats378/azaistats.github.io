@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Like Count Fetcher</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+    </style>
+</head>
+<body>
+    <h1>YouTube Like Count Fetcher</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Video ID</th>
+                <th>Label</th>
+                <th>Like Count</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>fRWPTnzHZKE</td>
+                <td>Needle</td>
+                <td id="like-fRWPTnzHZKE">Loading...</td>
+            </tr>
+            <tr>
+                <td>zeL0ueV_t5g</td>
+                <td>Tennis Ball</td>
+                <td id="like-zeL0ueV_t5g">Loading...</td>
+            </tr>
+            <tr>
+                <td>PebfN2U8Q9g</td>
+                <td>Nickel</td>
+                <td id="like-PebfN2U8Q9g">Loading...</td>
+            </tr>
+            <tr>
+                <td>CheLWDCi79M</td>
+                <td>Book</td>
+                <td id="like-CheLWDCi79M">Loading...</td>
+            </tr>
+            <tr>
+                <td>JCop65-cz9g</td>
+                <td>Fries</td>
+                <td id="like-JCop65-cz9g">Loading...</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <script>
+        const videoIds = [
+            "fRWPTnzHZKE",
+            "zeL0ueV_t5g",
+            "PebfN2U8Q9g",
+            "CheLWDCi79M",
+            "JCop65-cz9g"
+        ];
+
+        function fetchLikeCounts() {
+            videoIds.forEach(id => {
+                fetch(`https://api.socialcounts.org/youtube-video-live-view-count/${id}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        const likeCount = data.table.find(item => item.name === "Like Count").count;
+                        document.getElementById(`like-${id}`).textContent = likeCount;
+                    })
+                    .catch(error => {
+                        console.error(`Error fetching data for video ID ${id}:`, error);
+                        document.getElementById(`like-${id}`).textContent = "Error";
+                    });
+            });
+        }
+
+        // Initial fetch
+        fetchLikeCounts();
+
+        // Fetch every 10 seconds
+        setInterval(fetchLikeCounts, 10000);
+    </script>
+</body>
+</html>
