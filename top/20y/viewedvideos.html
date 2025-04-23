@@ -130,7 +130,7 @@
   }
 
   function updateVideos() {
-    const now = "2005-04-22T12:00:00Z"; // fixed time for testing
+    const now = "2005-04-22T12:00:00Z";
     const ranked = videos
       .map(v => ({ ...v, liveViews: getViewCount(v, now) }))
       .sort((a, b) => b.liveViews - a.liveViews)
@@ -144,9 +144,35 @@
     ranked.forEach((v, i) => {
       const card = document.createElement("div");
       card.className = "video-card";
+
+      const img = document.createElement("img");
+      const originalSrc = `https://azaistats.github.io/images/thumbnails/${v.id}`;
+      const fallbackSrc = `https://azaistats.github.io/images/thumbnails/thisthumbnailislost.png`;
+
+      img.src = originalSrc;
+      img.alt = "Thumbnail";
+      img.className = "thumbnail";
+
+      img.onerror = function () {
+        img.src = fallbackSrc;
+
+        const retry = () => {
+          const probe = new Image();
+          probe.onload = () => {
+            img.src = originalSrc;
+          };
+          probe.onerror = () => setTimeout(retry, 30000);
+          probe.src = originalSrc + "?t=" + Date.now();
+        };
+
+        setTimeout(retry, 30000);
+      };
+
       card.innerHTML = `
         <div class="rank">#${String(i + 1).padStart(2, "0")}</div>
-        <img src="https://azaistats.github.io/images/thumbnails/${v.id}" alt="Thumbnail">
+      `;
+      card.appendChild(img);
+      card.innerHTML += `
         <div class="title">${v.title}</div>
         <div class="creator">By: ${v.creator}</div>
         <div class="views">${Math.floor(v.liveViews).toLocaleString()} views</div>
@@ -167,10 +193,10 @@
       .sort((a, b) => b.views - a.views);
 
     userList.innerHTML = "";
-    sortedUsers.forEach(u => {
+    sortedUsers.forEach((u, i) => {
       const li = document.createElement("li");
       li.className = "user-item";
-      li.innerHTML = `<div class="user-name">${u.name}</div>
+      li.innerHTML = `<div class="user-name">#${i + 1} ${u.name}</div>
                       <div class="views">${u.views.toLocaleString()} total views</div>`;
       userList.appendChild(li);
     });
@@ -187,10 +213,13 @@
 
   updateVideos();
   renderUsers();
-  setInterval(updateVideos, 1000); // update every second
+  setInterval(updateVideos, 1000);
 </script>
+
+<!-- Refresh the entire page every hour to pull fresh data -->
 <script>
   setTimeout(() => location.reload(), 3600000);
 </script>
+
 </body>
 </html>
