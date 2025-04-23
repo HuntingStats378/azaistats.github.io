@@ -44,6 +44,17 @@
       color: #666;
       font-size: 0.9em;
     }
+    .creator {
+      color: #777;
+      font-size: 0.9em;
+      margin-top: 5px;
+    }
+    .link {
+      display: block;
+      text-align: center;
+      margin-top: 20px;
+      font-size: 1.1em;
+    }
   </style>
 </head>
 <body>
@@ -51,33 +62,38 @@
 <h1>Top 50 Most Viewed Videos - 20 Years Ago (Live)</h1>
 <div class="grid" id="videoGrid"></div>
 
+<a href="most_viewed_users.html" class="link">View Most Viewed Users</a>
+
 <script>
   const videos = [
     {
       id: "vid1",
       title: "Space Cat Rave",
+      creator: "John Doe",
       thumbnail: "https://placekitten.com/320/180",
       views: [
         { timestamp: "2005-04-22T00:00:00Z", count: 1_000_000_000 },
-        { timestamp: "2005-04-25T00:00:00Z", count: 10_000_000_000 }
+        { timestamp: "2005-04-23T00:00:00Z", count: 10_000_000_000 }
       ]
     },
     {
       id: "vid2",
       title: "Banana Slip Fail",
+      creator: "Jane Smith",
       thumbnail: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Banana-Single.jpg/320px-Banana-Single.jpg",
       views: [
         { timestamp: "2005-04-22T00:00:00Z", count: 5_000_000_000 },
-        { timestamp: "2005-04-25T12:00:00Z", count: 12_000_000_000 }
+        { timestamp: "2005-04-23T12:00:00Z", count: 12_000_000_000 }
       ]
     },
     {
       id: "vid3",
       title: "Ultimate Fart Compilation",
+      creator: "FartMaster3000",
       thumbnail: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Wind_cloud.jpg/320px-Wind_cloud.jpg",
       views: [
         { timestamp: "2005-04-22T12:00:00Z", count: 9_000_000_000 },
-        { timestamp: "2005-04-25T18:00:00Z", count: 11_000_000_000 }
+        { timestamp: "2005-04-23T18:00:00Z", count: 11_000_000_000 }
       ]
     }
   ];
@@ -130,7 +146,6 @@
 
       let reloadImg = '';
       if (previousRanks[video.id] !== undefined && previousRanks[video.id] !== newRanks[video.id]) {
-        // Overtake detected, force image reload
         reloadImg = `?t=${Date.now()}`;
       }
 
@@ -139,6 +154,7 @@
         <img id="${imgId}" src="${video.thumbnail}${reloadImg}" class="thumbnail" alt="Thumbnail">
         <div class="title">${video.title}</div>
         <div class="views">${video.interpolatedViews.toLocaleString()} views</div>
+        <div class="creator">Made by: ${video.creator}</div>
       `;
 
       container.appendChild(card);
@@ -147,8 +163,8 @@
     previousRanks = newRanks;
   }
 
-  render(); // initial render
-  setInterval(render, 1000); // update every second
+  render();
+  setInterval(render, 1000);
 </script>
 
 </body>
