@@ -74,6 +74,20 @@
     .user-name {
       font-weight: bold;
     }
+    .btn-missing {
+  display: block;
+  margin: 40px auto 20px;
+  padding: 12px 24px;
+  background: #28a745;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+}
+.btn-missing:hover {
+  background: #218838;
+}
   </style>
 </head>
 <body>
@@ -222,6 +236,9 @@
   // Refresh the entire page every hour to get fresh data
   setTimeout(() => location.reload(), 3600000);
 </script>
-
+<!-- Add this at the end of the <body> tag -->
+<button class="btn-missing" onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSeDvUmlaNzCZ2b4eMJq5aXh3a4VUslWaLqRUF4h395KQ5DG_A/viewform?usp=dialog', '_blank')">
+  Submit a Missing Video
+</button>
 </body>
 </html>
