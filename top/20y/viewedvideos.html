@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Top 50 Videos - 20 Years Ago</title>
+  <title>Live Top 50 Videos – 20 Years Ago</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -47,12 +47,10 @@
 </head>
 <body>
 
-<h1>Top 50 Most Viewed Videos - 20 Years Ago</h1>
+<h1>Top 50 Most Viewed Videos - 20 Years Ago (Live)</h1>
 <div class="grid" id="videoGrid"></div>
 
 <script>
-  const targetDate = new Date("2005-04-23T00:00:00Z");
-
   const videos = [
     {
       id: "dQw4w9WgXcQ",
@@ -60,8 +58,8 @@
       thumbnail: "https://upload.wikimedia.org/wikipedia/en/5/5f/Rick_Astley_-_Never_Gonna_Give_You_Up.png",
       views: [
         { timestamp: "2005-04-22T12:00:00Z", count: 200 },
-        { timestamp: "2005-04-23T06:00:00Z", count: 806000 },
-        { timestamp: "2005-04-24T00:00:00Z", count: 1400000 }
+        { timestamp: "2005-04-23T06:00:00Z", count: 800000000 },
+        { timestamp: "2005-04-24T00:00:00Z", count: 1400 }
       ]
     },
     {
@@ -70,16 +68,16 @@
       thumbnail: "https://placekitten.com/320/180",
       views: [
         { timestamp: "2005-04-21T10:00:00Z", count: 100 },
-        { timestamp: "2005-04-23T00:00:00Z", count: 806001 },
-        { timestamp: "2005-04-25T15:00:00Z", count: 10000000 }
+        { timestamp: "2005-04-23T00:00:00Z", count: 300000000 },
+        { timestamp: "2005-04-25T15:00:00Z", count: 1000 }
       ]
     }
   ];
 
+  const container = document.getElementById('videoGrid');
+
   function interpolateViewCount(views, targetTime) {
     const t = new Date(targetTime).getTime();
-
-    // Ensure sorted by time
     const sorted = views.slice().sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
 
     for (let i = 0; i < sorted.length - 1; i++) {
@@ -93,33 +91,44 @@
       }
     }
 
-    // If before first or after last point
     if (t < new Date(sorted[0].timestamp)) return sorted[0].count;
     if (t > new Date(sorted[sorted.length - 1].timestamp)) return sorted[sorted.length - 1].count;
   }
 
-  const ranked = videos.map(video => {
-    return {
-      ...video,
-      interpolatedViews: interpolateViewCount(video.views, targetDate)
-    };
-  }).sort((a, b) => b.interpolatedViews - a.interpolatedViews);
+  function render() {
+    const now = new Date();
+    const twentyYearsAgo = new Date(now);
+    twentyYearsAgo.setFullYear(now.getFullYear() - 20);
 
-  const container = document.getElementById('videoGrid');
+    const ranked = videos.map(video => {
+      return {
+        ...video,
+        interpolatedViews: interpolateViewCount(video.views, twentyYearsAgo)
+      };
+    }).sort((a, b) => b.interpolatedViews - a.interpolatedViews);
 
-  ranked.forEach((video, index) => {
-    const card = document.createElement('div');
-    card.className = 'video-card';
+    container.innerHTML = ''; // Clear previous content
 
-    card.innerHTML = `
-      <div class="rank">#${String(index + 1).padStart(2, '0')}</div>
-      <img src="${video.thumbnail}" class="thumbnail" alt="Thumbnail">
-      <div class="title">${video.title}</div>
-      <div class="views">${video.interpolatedViews.toLocaleString()} views</div>
-    `;
+    ranked.forEach((video, index) => {
+      const card = document.createElement('div');
+      card.className = 'video-card';
 
-    container.appendChild(card);
-  });
+      card.innerHTML = `
+        <div class="rank">#${String(index + 1).padStart(2, '0')}</div>
+        <img src="${video.thumbnail}" class="thumbnail" alt="Thumbnail">
+        <div class="title">${video.title}</div>
+        <div class="views">${video.interpolatedViews.toLocaleString()} views</div>
+      `;
+
+      container.appendChild(card);
+    });
+  }
+
+  // Initial render
+  render();
+
+  // Update every second
+  setInterval(render, 1000);
 </script>
 
 </body>
