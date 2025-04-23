@@ -23,6 +23,7 @@
       border-radius: 10px;
       padding: 12px;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
     }
     .rank {
       font-size: 1.2em;
@@ -53,28 +54,36 @@
 <script>
   const videos = [
     {
-      id: "dQw4w9WgXcQ",
-      title: "Never Gonna Give You Up",
-      thumbnail: "https://upload.wikimedia.org/wikipedia/en/5/5f/Rick_Astley_-_Never_Gonna_Give_You_Up.png",
+      id: "vid1",
+      title: "Space Cat Rave",
+      thumbnail: "https://placekitten.com/320/180",
       views: [
-        { timestamp: "2005-04-22T12:00:00Z", count: 200 },
-        { timestamp: "2005-04-23T06:00:00Z", count: 800000000 },
-        { timestamp: "2005-04-24T00:00:00Z", count: 1400 }
+        { timestamp: "2005-04-22T00:00:00Z", count: 1_000_000_000 },
+        { timestamp: "2005-04-23T00:00:00Z", count: 10_000_000_000 }
       ]
     },
     {
-      id: "abc123deleted",
-      title: "Lost Classic Cat Video",
-      thumbnail: "https://placekitten.com/320/180",
+      id: "vid2",
+      title: "Banana Slip Fail",
+      thumbnail: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Banana-Single.jpg/320px-Banana-Single.jpg",
       views: [
-        { timestamp: "2005-04-21T10:00:00Z", count: 100 },
-        { timestamp: "2005-04-23T00:00:00Z", count: 300000000 },
-        { timestamp: "2005-04-25T15:00:00Z", count: 1000 }
+        { timestamp: "2005-04-22T00:00:00Z", count: 5_000_000_000 },
+        { timestamp: "2005-04-23T12:00:00Z", count: 12_000_000_000 }
+      ]
+    },
+    {
+      id: "vid3",
+      title: "Ultimate Fart Compilation",
+      thumbnail: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Wind_cloud.jpg/320px-Wind_cloud.jpg",
+      views: [
+        { timestamp: "2005-04-22T12:00:00Z", count: 9_000_000_000 },
+        { timestamp: "2005-04-23T18:00:00Z", count: 11_000_000_000 }
       ]
     }
   ];
 
   const container = document.getElementById('videoGrid');
+  let previousRanks = {};
 
   function interpolateViewCount(views, targetTime) {
     const t = new Date(targetTime).getTime();
@@ -107,28 +116,39 @@
       };
     }).sort((a, b) => b.interpolatedViews - a.interpolatedViews);
 
-    container.innerHTML = ''; // Clear previous content
+    const newRanks = {};
+    ranked.forEach((video, index) => {
+      newRanks[video.id] = index;
+    });
+
+    container.innerHTML = '';
 
     ranked.forEach((video, index) => {
       const card = document.createElement('div');
       card.className = 'video-card';
+      const imgId = `thumb-${video.id}`;
+
+      let reloadImg = '';
+      if (previousRanks[video.id] !== undefined && previousRanks[video.id] !== newRanks[video.id]) {
+        // Overtake detected, force image reload
+        reloadImg = `?t=${Date.now()}`;
+      }
 
       card.innerHTML = `
         <div class="rank">#${String(index + 1).padStart(2, '0')}</div>
-        <img src="${video.thumbnail}" class="thumbnail" alt="Thumbnail">
+        <img id="${imgId}" src="${video.thumbnail}${reloadImg}" class="thumbnail" alt="Thumbnail">
         <div class="title">${video.title}</div>
         <div class="views">${video.interpolatedViews.toLocaleString()} views</div>
       `;
 
       container.appendChild(card);
     });
+
+    previousRanks = newRanks;
   }
 
-  // Initial render
-  render();
-
-  // Update every second
-  setInterval(render, 1000);
+  render(); // initial render
+  setInterval(render, 1000); // update every second
 </script>
 
 </body>
