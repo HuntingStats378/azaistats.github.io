@@ -78,7 +78,7 @@
 </head>
 <body>
 
-<h1>Top 50 Most Viewed Videos – From eeee20 Years Ago</h1>
+<h1>Top 50 Most Viewed Videos – From 20 Years Ago</h1>
 <button class="btn-toggle" id="toggleView">Switch to Most Viewed Users</button>
 
 <div id="videosContainer" class="container">
@@ -108,8 +108,8 @@
         { timestamp: "2005-04-22T00:00:00Z", count: 500000000 },
         { timestamp: "2005-04-23T00:00:00Z", count: 1400000000 }
       ]
-    },
-    // Add up to 60 videos here...
+    }
+    // Add more videos as needed
   ];
 
   const videoGrid = document.getElementById("videoGrid");
@@ -179,15 +179,18 @@
       `;
       videoGrid.appendChild(card);
     });
+
+    renderUsers(now);
   }
 
-  function renderUsers() {
+  function renderUsers(now) {
     const userMap = {};
     videos.forEach(v => {
-      const total = v.views.reduce((sum, p) => sum + p.count, 0);
+      const liveViews = getViewCount(v, now);
       if (!userMap[v.creator]) userMap[v.creator] = 0;
-      userMap[v.creator] += total;
+      userMap[v.creator] += liveViews;
     });
+
     const sortedUsers = Object.entries(userMap)
       .map(([name, views]) => ({ name, views }))
       .sort((a, b) => b.views - a.views);
@@ -197,7 +200,7 @@
       const li = document.createElement("li");
       li.className = "user-item";
       li.innerHTML = `<div class="user-name">#${i + 1} ${u.name}</div>
-                      <div class="views">${u.views.toLocaleString()} total views</div>`;
+                      <div class="views">${Math.floor(u.views).toLocaleString()} total views</div>`;
       userList.appendChild(li);
     });
   }
@@ -212,12 +215,9 @@
   });
 
   updateVideos();
-  renderUsers();
   setInterval(updateVideos, 1000);
-</script>
 
-<!-- Refresh the entire page every hour to pull fresh data -->
-<script>
+  // Refresh the entire page every hour to get fresh data
   setTimeout(() => location.reload(), 3600000);
 </script>
 
