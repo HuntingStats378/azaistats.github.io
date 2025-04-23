@@ -130,8 +130,10 @@
     });
   });
 
-  // Sort users by total views
-  const sortedUsers = Object.entries(users).sort((a, b) => b[1] - a[1]);
+  // Sort users by total views (descending)
+  const sortedUsers = Object.entries(users)
+    .sort((a, b) => b[1] - a[1]) // Ensure descending order
+    .map(([creator, totalViews]) => ({ creator, totalViews }));
 
   const containerVideos = document.getElementById('videosContainer');
   const containerUsers = document.getElementById('usersContainer');
@@ -146,7 +148,14 @@
   function renderVideos() {
     videoGrid.innerHTML = '';
 
-    videos.forEach((video, index) => {
+    // Sort videos by views (descending)
+    const rankedVideos = videos.sort((a, b) => {
+      const totalA = a.views.reduce((acc, view) => acc + view.count, 0);
+      const totalB = b.views.reduce((acc, view) => acc + view.count, 0);
+      return totalB - totalA; // Ensure descending order
+    });
+
+    rankedVideos.forEach((video, index) => {
       const card = document.createElement('div');
       card.className = 'video-card';
       const imgId = `thumb-${video.id}`;
@@ -166,12 +175,12 @@
   function renderUsers() {
     userList.innerHTML = '';
 
-    sortedUsers.forEach(([creator, totalViews], index) => {
+    sortedUsers.forEach((user, index) => {
       const item = document.createElement('li');
       item.className = 'user-item';
       item.innerHTML = `
-        <div class="user-name">${creator}</div>
-        <div class="user-total-views">${totalViews.toLocaleString()} total views</div>
+        <div class="user-name">${user.creator}</div>
+        <div class="user-total-views">${user.totalViews.toLocaleString()} total views</div>
       `;
       userList.appendChild(item);
     });
