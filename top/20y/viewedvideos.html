@@ -18,31 +18,26 @@
       grid-template-columns: repeat(5, 1fr);
       gap: 20px;
     }
-    .video-card {
+    .video-card, .user-item {
       background: white;
       border-radius: 10px;
       padding: 12px;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
       transition: transform 0.3s ease;
     }
-    .rank {
+    .rank, .user-name {
       font-size: 1.2em;
       font-weight: bold;
-      margin-bottom: 5px;
     }
-    .title {
-      font-weight: bold;
-      margin: 5px 0;
+    .title, .user-total-views {
+      color: #666;
+      font-size: 0.9em;
     }
     .thumbnail {
       width: 100%;
       height: auto;
       border-radius: 8px;
       margin-bottom: 5px;
-    }
-    .views {
-      color: #666;
-      font-size: 0.9em;
     }
     .creator {
       color: #777;
@@ -55,14 +50,38 @@
       margin-top: 20px;
       font-size: 1.1em;
     }
+    .btn-toggle {
+      margin: 20px 0;
+      padding: 10px;
+      background: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 1.1em;
+      width: 100%;
+      border-radius: 5px;
+    }
+    .btn-toggle:hover {
+      background-color: #45a049;
+    }
+    .container {
+      display: none;
+    }
   </style>
 </head>
 <body>
 
-<h1>Top 50 Most Viewed Videos - 20 Years Ago (Live)</h1>
-<div class="grid" id="videoGrid"></div>
+<h1>Top 50 Most Viewed Videos and Users - 20 Years Ago (Live)</h1>
 
-<a href="most_viewed_users.html" class="link">View Most Viewed Users</a>
+<button class="btn-toggle" id="toggleButton">Switch to Most Viewed Users</button>
+
+<div id="videosContainer" class="container">
+  <div class="grid" id="videoGrid"></div>
+</div>
+
+<div id="usersContainer" class="container">
+  <ul class="user-list" id="userList"></ul>
+</div>
 
 <script>
   const videos = [
@@ -98,73 +117,82 @@
     }
   ];
 
-  const container = document.getElementById('videoGrid');
-  let previousRanks = {};
+  // Calculate user total views
+  const users = {};
 
-  function interpolateViewCount(views, targetTime) {
-    const t = new Date(targetTime).getTime();
-    const sorted = views.slice().sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
-
-    for (let i = 0; i < sorted.length - 1; i++) {
-      const t1 = new Date(sorted[i].timestamp).getTime();
-      const t2 = new Date(sorted[i + 1].timestamp).getTime();
-      if (t >= t1 && t <= t2) {
-        const v1 = sorted[i].count;
-        const v2 = sorted[i + 1].count;
-        const ratio = (t - t1) / (t2 - t1);
-        return Math.round(v1 + ratio * (v2 - v1));
-      }
+  videos.forEach(video => {
+    if (!users[video.creator]) {
+      users[video.creator] = 0;
     }
-
-    if (t < new Date(sorted[0].timestamp)) return sorted[0].count;
-    if (t > new Date(sorted[sorted.length - 1].timestamp)) return sorted[sorted.length - 1].count;
-  }
-
-  function render() {
-    const now = new Date();
-    const twentyYearsAgo = new Date(now);
-    twentyYearsAgo.setFullYear(now.getFullYear() - 20);
-
-    const ranked = videos.map(video => {
-      return {
-        ...video,
-        interpolatedViews: interpolateViewCount(video.views, twentyYearsAgo)
-      };
-    }).sort((a, b) => b.interpolatedViews - a.interpolatedViews);
-
-    const newRanks = {};
-    ranked.forEach((video, index) => {
-      newRanks[video.id] = index;
+    // Sum views of each video for the user
+    video.views.forEach(view => {
+      users[video.creator] += view.count;
     });
+  });
 
-    container.innerHTML = '';
+  // Sort users by total views
+  const sortedUsers = Object.entries(users).sort((a, b) => b[1] - a[1]);
 
-    ranked.forEach((video, index) => {
+  const containerVideos = document.getElementById('videosContainer');
+  const containerUsers = document.getElementById('usersContainer');
+  const toggleButton = document.getElementById('toggleButton');
+  const videoGrid = document.getElementById('videoGrid');
+  const userList = document.getElementById('userList');
+  
+  // Show videos by default
+  containerVideos.style.display = 'block';
+
+  // Function to render the videos list
+  function renderVideos() {
+    videoGrid.innerHTML = '';
+
+    videos.forEach((video, index) => {
       const card = document.createElement('div');
       card.className = 'video-card';
       const imgId = `thumb-${video.id}`;
-
-      let reloadImg = '';
-      if (previousRanks[video.id] !== undefined && previousRanks[video.id] !== newRanks[video.id]) {
-        reloadImg = `?t=${Date.now()}`;
-      }
-
+      
       card.innerHTML = `
         <div class="rank">#${String(index + 1).padStart(2, '0')}</div>
-        <img id="${imgId}" src="${video.thumbnail}${reloadImg}" class="thumbnail" alt="Thumbnail">
+        <img id="${imgId}" src="${video.thumbnail}" class="thumbnail" alt="Thumbnail">
         <div class="title">${video.title}</div>
-        <div class="views">${video.interpolatedViews.toLocaleString()} views</div>
+        <div class="views">${video.views.reduce((acc, v) => acc + v.count, 0).toLocaleString()} views</div>
         <div class="creator">Made by: ${video.creator}</div>
       `;
-
-      container.appendChild(card);
+      videoGrid.appendChild(card);
     });
-
-    previousRanks = newRanks;
   }
 
-  render();
-  setInterval(render, 1000);
+  // Function to render the users list
+  function renderUsers() {
+    userList.innerHTML = '';
+
+    sortedUsers.forEach(([creator, totalViews], index) => {
+      const item = document.createElement('li');
+      item.className = 'user-item';
+      item.innerHTML = `
+        <div class="user-name">${creator}</div>
+        <div class="user-total-views">${totalViews.toLocaleString()} total views</div>
+      `;
+      userList.appendChild(item);
+    });
+  }
+
+  // Switch between views
+  toggleButton.addEventListener('click', () => {
+    if (containerVideos.style.display === 'block') {
+      containerVideos.style.display = 'none';
+      containerUsers.style.display = 'block';
+      toggleButton.textContent = 'Switch to Top 50 Videos';
+    } else {
+      containerVideos.style.display = 'block';
+      containerUsers.style.display = 'none';
+      toggleButton.textContent = 'Switch to Most Viewed Users';
+    }
+  });
+
+  // Initial render
+  renderVideos();
+  renderUsers();
 </script>
 
 </body>
