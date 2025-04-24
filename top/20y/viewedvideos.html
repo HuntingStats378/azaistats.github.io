@@ -172,7 +172,7 @@
   }
 
   function updateVideos() {
-    const now = new Date().toISOString();
+    const now = new Date(Date.now() - 20 * 365.25 * 24 * 60 * 60 * 1000).toISOString();
     const ranked = videos
       .map(v => ({ ...v, liveViews: getViewCount(v, now) }))
       .sort((a, b) => b.liveViews - a.liveViews)
