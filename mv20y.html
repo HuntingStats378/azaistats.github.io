@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Top 50 YouTube Videos – 20 Years Ago</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+    }
+    .btn-toggle {
+      display: block;
+      margin: 20px auto;
+      padding: 10px 20px;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 16px;
+    }
+    .video-card {
+      background: white;
+      padding: 10px;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .video-card img {
+      width: 100%;
+      border-radius: 8px;
+      margin-bottom: 8px;
+    }
+    .rank {
+      font-weight: bold;
+    }
+    .title {
+      font-size: 0.9em;
+      margin: 4px 0;
+    }
+    .creator {
+      font-size: 0.85em;
+      color: #666;
+    }
+    .views {
+      font-size: 0.85em;
+      color: #444;
+    }
+    .container {
+      display: none;
+    }
+    #videosContainer {
+      display: block;
+    }
+    ul.user-list {
+      list-style: none;
+      padding: 0;
+    }
+    .user-item {
+      background: white;
+      margin-bottom: 10px;
+      padding: 10px;
+      border-radius: 8px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    }
+    .user-name {
+      font-weight: bold;
+    }
+    .btn-missing {
+  display: block;
+  margin: 40px auto 20px;
+  padding: 12px 24px;
+  background: #28a745;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+}
+.btn-missing:hover {
+  background: #218838;
+}
+  </style>
+</head>
+<body>
+
+<h1>Top 50 Most Viewed Videos – From 20 Years Ago</h1>
+<button class="btn-toggle" id="toggleView">Switch to Most Viewed Users</button>
+
+<div id="videosContainer" class="container">
+  <div class="grid" id="videoGrid"></div>
+</div>
+
+<div id="usersContainer" class="container">
+  <ul class="user-list" id="userList"></ul>
+</div>
+
+<script>
+  const videos = [
+    {
+      id: "jNQXAC9IVRw",
+      title: "Me at the zoo",
+      creator: "jawed",
+      views: [
+        { timestamp: "2005-04-24T03:27:12Z", count: 0 },
+        { timestamp: "2006-03-21T12:38:38Z", count: 716 },
+        { timestamp: "2006-05-01T20:54:58Z", count: 799 }
+      ]
+    },
+    {
+      id: "nGzAI5pLbMY",
+      title: "Rolling down a hill",
+      creator: "jawed",
+      views: [
+        { timestamp: "2005-04-24T04:15:00Z", count: 0 },
+        { timestamp: "2006-03-21T12:38:38Z", count: 623 },
+        { timestamp: "2006-05-01T20:54:58Z", count: 698 }
+      ]
+    },
+    {
+      id: "APDOuAwvTEM",
+      title: "Eric cooking crabs",
+      creator: "minishorts",
+      views: [
+        { timestamp: "2005-06-26T08:45:53Z", count: 0 },
+        { timestamp: "2005-06-30T02:03:31Z", count: 6287 },
+        { timestamp: "2005-07-02T23:59:43Z", count: 8974 },
+        { timestamp: "2005-11-02T13:14:47Z", count: 11307 }
+        ]
+    },
+    {
+      id: "vy8evhya_9E",
+      title: "Under the Bridge!",
+      creator: "jawed",
+      views: [
+        { timestamp: "2005-06-11T00:00:00Z", count: 0 },
+        { timestamp: "2005-06-30T02:03:31Z", count: 24838 },
+        { timestamp: "2005-07-02T23:59:43Z", count: 25478 },
+        { timestamp: "2005-07-28T15:15:28Z", count: 27965 },
+        { timestamp: "2005-11-02T03:37:07Z", count: 34314 },
+        { timestamp: "2005-12-18T15:18:50Z", count: 37736 },
+        { timestamp: "2006-01-30T21:25:57Z", count: 48542 },
+        { timestamp: "2006-02-03T19:52:35Z", count: 50493 },
+        { timestamp: "2006-02-03T19:52:36Z", count: 0 }
+        ]
+    }
+  ];
+
+  const videoGrid = document.getElementById("videoGrid");
+  const userList = document.getElementById("userList");
+  const toggleBtn = document.getElementById("toggleView");
+  const videoContainer = document.getElementById("videosContainer");
+  const usersContainer = document.getElementById("usersContainer");
+
+  let lastRanks = [];
+
+  function getViewCount(video, now) {
+    const [start, end] = video.views;
+    const t1 = new Date(start.timestamp).getTime();
+    const t2 = new Date(end.timestamp).getTime();
+    const nowTime = new Date(now).getTime();
+    const ratio = Math.min(1, Math.max(0, (nowTime - t1) / (t2 - t1)));
+    return start.count + (end.count - start.count) * ratio;
+  }
+
+  function updateVideos() {
+    const now = new Date(Date.now() - 20 * 365.25 * 24 * 60 * 60 * 1000).toISOString();
+    const ranked = videos
+      .map(v => ({ ...v, liveViews: getViewCount(v, now) }))
+      .sort((a, b) => b.liveViews - a.liveViews)
+      .slice(0, 50);
+
+    const newRanks = ranked.map(v => v.id);
+    const changed = JSON.stringify(lastRanks) !== JSON.stringify(newRanks);
+    if (changed) lastRanks = newRanks;
+
+    videoGrid.innerHTML = "";
+    ranked.forEach((v, i) => {
+      const card = document.createElement("div");
+      card.className = "video-card";
+
+      const img = document.createElement("img");
+      const originalSrc = `https://azaistats.github.io/images/thumbnails/${v.id}`;
+      const fallbackSrc = `https://azaistats.github.io/images/thumbnails/thisthumbnailislost.png`;
+
+      img.src = originalSrc;
+      img.alt = "Thumbnail";
+      img.className = "thumbnail";
+
+      img.onerror = function () {
+        img.src = fallbackSrc;
+
+        const retry = () => {
+          const probe = new Image();
+          probe.onload = () => {
+            img.src = originalSrc;
+          };
+          probe.onerror = () => setTimeout(retry, 30000);
+          probe.src = originalSrc + "?t=" + Date.now();
+        };
+
+        setTimeout(retry, 30000);
+      };
+
+      card.innerHTML = `
+        <div class="rank">#${String(i + 1).padStart(2, "0")}</div>
+      `;
+      card.appendChild(img);
+      card.innerHTML += `
+        <div class="title">${v.title}</div>
+        <div class="creator">By: ${v.creator}</div>
+        <div class="views">${Math.floor(v.liveViews).toLocaleString()} views</div>
+      `;
+      videoGrid.appendChild(card);
+    });
+
+    renderUsers(now);
+  }
+
+  function renderUsers(now) {
+    const userMap = {};
+    videos.forEach(v => {
+      const liveViews = getViewCount(v, now);
+      if (!userMap[v.creator]) userMap[v.creator] = 0;
+      userMap[v.creator] += liveViews;
+    });
+
+    const sortedUsers = Object.entries(userMap)
+      .map(([name, views]) => ({ name, views }))
+      .sort((a, b) => b.views - a.views);
+
+    userList.innerHTML = "";
+    sortedUsers.forEach((u, i) => {
+      const li = document.createElement("li");
+      li.className = "user-item";
+      li.innerHTML = `<div class="user-name">#${i + 1} ${u.name}</div>
+                      <div class="views">${Math.floor(u.views).toLocaleString()} total views</div>`;
+      userList.appendChild(li);
+    });
+  }
+
+  toggleBtn.addEventListener("click", () => {
+    const showingVideos = videoContainer.style.display === "block";
+    videoContainer.style.display = showingVideos ? "none" : "block";
+    usersContainer.style.display = showingVideos ? "block" : "none";
+    toggleBtn.textContent = showingVideos
+      ? "Switch to Top 50 Videos"
+      : "Switch to Most Viewed Users";
+  });
+
+  updateVideos();
+  setInterval(updateVideos, 1000);
+  setTimeout(() => location.reload(), 3600000);
+</script>
+<button class="btn-missing" onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSeDvUmlaNzCZ2b4eMJq5aXh3a4VUslWaLqRUF4h395KQ5DG_A/viewform?usp=dialog', '_blank')">
+  Submit a Missing Video
+</button>
+</body>
+</html>
