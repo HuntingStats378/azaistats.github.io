@@ -2,20 +2,16 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>20 Years Ago Live Chart</title>
+  <title>Live 20 Years Ago Chart</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     html, body {
       width: 100%;
       height: 100%;
-      overflow: hidden;
-      font-family: sans-serif;
-      background: #111;
+      background: black;
       color: white;
+      font-family: 'Georgia', serif;
+      overflow: hidden;
     }
     #container {
       display: flex;
@@ -25,26 +21,37 @@
     }
     #timestamp {
       text-align: center;
-      font-size: 20px;
+      font-size: 22px;
       padding: 10px;
       font-weight: bold;
-      background: #222;
-      color: #eee;
+      background: #111;
+    }
+    #axis {
+      display: flex;
+      position: relative;
+      height: 30px;
+      align-items: center;
+      padding: 0 150px;
+      font-size: 16px;
+      font-weight: bold;
+    }
+    #axis div {
+      flex-grow: 1;
+      text-align: center;
     }
     #chart {
       flex-grow: 1;
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
-      padding: 10px;
-      overflow: hidden;
+      padding: 10px 150px;
+      gap: 10px;
     }
     .bar {
       display: flex;
       align-items: center;
-      margin: 4px 0;
-      height: 40px;
       position: relative;
+      height: 50px;
     }
     .creator {
       width: 80px;
@@ -55,34 +62,32 @@
       flex-shrink: 0;
     }
     .thumbnail {
-      width: 40px;
-      height: 40px;
+      width: 50px;
+      height: 50px;
       margin-right: 10px;
-      flex-shrink: 0;
       background-size: cover;
       background-position: center;
-      border-radius: 4px;
+      border-radius: 5px;
+      flex-shrink: 0;
     }
     .bar-inner {
       height: 100%;
-      background: gray;
       display: flex;
       align-items: center;
-      padding-left: 10px;
+      justify-content: center;
       font-weight: bold;
+      font-size: 20px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      font-size: 14px;
-      border-radius: 4px;
-      position: relative;
+      background: gray;
+      border-radius: 5px;
     }
     .bar-value {
-      margin-left: 8px;
-      flex-shrink: 0;
+      margin-left: 10px;
+      font-size: 20px;
       font-weight: bold;
-      color: white;
-      font-size: 14px;
+      flex-shrink: 0;
     }
   </style>
 </head>
@@ -90,6 +95,13 @@
 
 <div id="container">
   <div id="timestamp"></div>
+  <div id="axis">
+    <div id="tick0">0</div>
+    <div id="tick1">0</div>
+    <div id="tick2">0</div>
+    <div id="tick3">0</div>
+    <div id="tick4">0</div>
+  </div>
   <div id="chart"></div>
 </div>
 
@@ -104,72 +116,75 @@ const videos = [
       { timestamp: "2006-03-21T12:38:38Z", count: 716 },
       { timestamp: "2006-05-01T20:54:58Z", count: 799 }
     ]
-  }
-  // Add more videos here if needed...
+  },
+  // Add more videos here
 ];
 
-// Helper: Load image and get average color
-function getAverageColor(img) {
-  const canvas = document.createElement('canvas');
-  const ctx = canvas.getContext('2d');
-  canvas.width = canvas.height = 1;
-  ctx.drawImage(img, 0, 0, 1, 1);
-  const data = ctx.getImageData(0, 0, 1, 1).data;
-  return `rgb(${data[0]},${data[1]},${data[2]})`;
-}
-
-// State
-const videoStates = {}; // id => {currentViews, color, loaded}
-const chart = document.getElementById('chart');
-const timestampDiv = document.getElementById('timestamp');
-
-// Initialize thumbnails
+// Load thumbnails
+const videoStates = {}; // id => { color, loaded }
 videos.forEach(video => {
   const img = new Image();
   img.crossOrigin = "Anonymous";
   img.src = `https://azaistats.github.io/images/thumbnails/${video.id}.jpg`;
   img.onload = () => {
-    const color = getAverageColor(img);
-    videoStates[video.id] = { currentViews: 0, color: color, loaded: true };
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = canvas.height = 1;
+    ctx.drawImage(img, 0, 0, 1, 1);
+    const data = ctx.getImageData(0, 0, 1, 1).data;
+    videoStates[video.id] = {
+      color: `rgb(${data[0]},${data[1]},${data[2]})`,
+      loaded: true
+    };
   };
   img.onerror = () => {
-    videoStates[video.id] = { currentViews: 0, color: '#888888', loaded: true };
+    videoStates[video.id] = { color: '#888888', loaded: true };
   };
 });
 
-// Virtual clock setup
-const msInDay = 24 * 60 * 60 * 1000;
-const offsetDays = 365.25 * 20;
-const offsetMs = offsetDays * msInDay;
-
-// Formatting timestamp
-function formatDateTime(date) {
-  return date.getFullYear() + "-" +
-         String(date.getMonth() + 1).padStart(2, '0') + "-" +
-         String(date.getDate()).padStart(2, '0') + " " +
-         String(date.getHours()).padStart(2, '0') + ":" +
-         String(date.getMinutes()).padStart(2, '0') + ":" +
-         String(date.getSeconds()).padStart(2, '0');
+// Subtract exactly 20 calendar years
+function subtract20Years(date) {
+  const copy = new Date(date);
+  copy.setUTCFullYear(copy.getUTCFullYear() - 20);
+  return copy;
 }
 
-// Interpolate views linearly between two points
-function interpolateViews(views, currentTime) {
-  if (!views.length) return 0;
-  const t = currentTime.getTime();
+// Format timestamp
+function formatDateTime(date) {
+  return date.getUTCFullYear() + "-" +
+    String(date.getUTCMonth() + 1).padStart(2, '0') + "-" +
+    String(date.getUTCDate()).padStart(2, '0') + " " +
+    String(date.getUTCHours()).padStart(2, '0') + ":" +
+    String(date.getUTCMinutes()).padStart(2, '0') + ":" +
+    String(date.getUTCSeconds()).padStart(2, '0');
+}
 
-  if (t < new Date(views[0].timestamp).getTime()) return null;
-  if (t >= new Date(views[views.length - 1].timestamp).getTime()) {
-    return views[views.length - 1].count;
+// Format number commas
+function formatNumber(n) {
+  return n.toLocaleString('en-US');
+}
+
+// Interpolate views
+function interpolateViews(video, currentTime) {
+  if (!video.views.length) return 0;
+
+  const uploadTime = new Date(video.views[0].timestamp);
+  if (currentTime < uploadTime) return null;
+
+  if (currentTime >= new Date(video.views[video.views.length - 1].timestamp)) {
+    return video.views[video.views.length - 1].count;
   }
 
-  for (let i = 0; i < views.length - 1; i++) {
-    const t0 = new Date(views[i].timestamp).getTime();
-    const t1 = new Date(views[i + 1].timestamp).getTime();
-    const c0 = views[i].count;
-    const c1 = views[i + 1].count;
+  for (let i = 0; i < video.views.length - 1; i++) {
+    const v0 = video.views[i];
+    const v1 = video.views[i + 1];
+    const t0 = new Date(v0.timestamp).getTime();
+    const t1 = new Date(v1.timestamp).getTime();
+    const c0 = v0.count;
+    const c1 = v1.count;
 
-    if (t >= t0 && t <= t1) {
-      const ratio = (t - t0) / (t1 - t0);
+    if (currentTime >= new Date(v0.timestamp) && currentTime <= new Date(v1.timestamp)) {
+      const ratio = (currentTime - t0) / (t1 - t0);
       return c0 + (c1 - c0) * ratio;
     }
   }
@@ -177,9 +192,19 @@ function interpolateViews(views, currentTime) {
   return 0;
 }
 
+const chart = document.getElementById('chart');
+const timestampDiv = document.getElementById('timestamp');
+const ticks = [
+  document.getElementById('tick0'),
+  document.getElementById('tick1'),
+  document.getElementById('tick2'),
+  document.getElementById('tick3'),
+  document.getElementById('tick4')
+];
+
 function updateChart() {
-  const now = new Date();
-  const virtualNow = new Date(now.getTime() - offsetMs);
+  const realNow = new Date();
+  const virtualNow = subtract20Years(realNow);
 
   timestampDiv.textContent = formatDateTime(virtualNow);
 
@@ -189,20 +214,33 @@ function updateChart() {
     const state = videoStates[video.id];
     if (!state || !state.loaded) return;
 
-    const currentViews = interpolateViews(video.views, virtualNow);
-    if (currentViews !== null) {
-      state.currentViews = currentViews;
-      activeVideos.push({ ...video, views: state.currentViews, color: state.color });
+    const interpolated = interpolateViews(video, virtualNow);
+    if (interpolated !== null) {
+      activeVideos.push({
+        id: video.id,
+        creator: video.creator,
+        title: video.title,
+        views: Math.round(interpolated),
+        color: state.color
+      });
     }
   });
 
   activeVideos.sort((a, b) => b.views - a.views);
-  const topVideos = activeVideos.slice(0, 20);
+  const top = activeVideos.slice(0, 20);
 
   chart.innerHTML = '';
-  const maxViews = Math.max(...topVideos.map(v => v.views), 1);
 
-  topVideos.forEach(video => {
+  const maxViews = Math.max(...top.map(v => v.views), 1);
+
+  // Update axis
+  ticks[0].textContent = formatNumber(0);
+  ticks[1].textContent = formatNumber(Math.round(maxViews * 0.25));
+  ticks[2].textContent = formatNumber(Math.round(maxViews * 0.5));
+  ticks[3].textContent = formatNumber(Math.round(maxViews * 0.75));
+  ticks[4].textContent = formatNumber(maxViews);
+
+  top.forEach(video => {
     const bar = document.createElement('div');
     bar.className = 'bar';
 
@@ -217,24 +255,21 @@ function updateChart() {
     const barInner = document.createElement('div');
     barInner.className = 'bar-inner';
     barInner.style.background = video.color;
-    barInner.style.width = `${(video.views / maxViews) * 70 + 30}%`; // 30% minimum width
-
+    barInner.style.width = `${(video.views / maxViews) * 100}%`;
     barInner.textContent = video.title;
 
-    const barValue = document.createElement('div');
-    barValue.className = 'bar-value';
-    barValue.textContent = Math.round(video.views);
+    const value = document.createElement('div');
+    value.className = 'bar-value';
+    value.textContent = formatNumber(video.views);
 
-    bar.appendChild(creator);
     bar.appendChild(thumbnail);
     bar.appendChild(barInner);
-    bar.appendChild(barValue);
+    bar.appendChild(value);
 
     chart.appendChild(bar);
   });
 }
 
-// Start the live update
 setInterval(updateChart, 1000);
 </script>
 
