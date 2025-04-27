@@ -107,18 +107,133 @@
 
 <script>
 const videos = [
-  {
-    id: "jNQXAC9IVRw",
-    title: "Me at the zoo",
-    creator: "jawed",
-    views: [
-      { timestamp: "2005-04-24T03:27:12Z", count: 0 },
-      { timestamp: "2006-03-21T12:38:38Z", count: 716 },
-      { timestamp: "2006-05-01T20:54:58Z", count: 799 }
-    ]
-  },
-  // Add more videos here
-];
+    {
+      id: "jNQXAC9IVRw",
+      title: "Me at the zoo",
+      creator: "jawed",
+      views: [
+        { timestamp: "2005-04-24T03:27:12Z", count: 0 },
+        { timestamp: "2006-03-21T12:38:38Z", count: 716 },
+        { timestamp: "2006-05-01T20:54:58Z", count: 799 }
+      ]
+    },
+    {
+      id: "nGzAI5pLbMY",
+      title: "Rolling down a hill",
+      creator: "jawed",
+      views: [
+        { timestamp: "2005-04-24T04:15:00Z", count: 0 },
+        { timestamp: "2006-03-21T12:38:38Z", count: 623 },
+        { timestamp: "2006-05-01T20:54:58Z", count: 698 }
+      ]
+    },
+    {
+      id: "APDOuAwvTEM",
+      title: "Eric cooking crabs",
+      creator: "minishorts",
+      views: [
+        { timestamp: "2005-06-26T08:45:53Z", count: 0 },
+        { timestamp: "2005-06-30T02:03:31Z", count: 6287 },
+        { timestamp: "2005-07-02T23:59:43Z", count: 8974 },
+        { timestamp: "2005-11-02T13:14:47Z", count: 11307 }
+        ]
+    },
+    {
+      id: "vy8evhya_9E",
+      title: "Under the Bridge!",
+      creator: "jawed",
+      views: [
+        { timestamp: "2005-06-11T00:00:00Z", count: 0 },
+        { timestamp: "2005-06-30T02:03:31Z", count: 24838 },
+        { timestamp: "2005-07-02T23:59:43Z", count: 25478 },
+        { timestamp: "2005-07-28T15:15:28Z", count: 27965 },
+        { timestamp: "2005-11-02T03:37:07Z", count: 34314 },
+        { timestamp: "2005-12-18T15:18:50Z", count: 37736 },
+        { timestamp: "2006-01-30T21:25:57Z", count: 48542 },
+        { timestamp: "2006-02-03T19:52:35Z", count: 50493 },
+        { timestamp: "2006-02-03T19:52:36Z", count: 0 }
+        ]
+    },
+    {
+      id: "hmicbxY99I8",
+      title: "Flambe Disaster",
+      creator: "tunafat",
+      views: [
+        { timestamp: "2005-04-24T11:00:00Z", count: 0 },
+        { timestamp: "2005-06-12T00:00:00Z", count: 50 },
+        { timestamp: "2006-06-30T02:03:31Z", count: 1443 },
+        { timestamp: "2006-07-02T23:59:43Z", count: 1502 },
+        { timestamp: "2007-09-23T03:14:12Z", count: 7874 }
+        ]
+    },
+    {
+      id: "MykmTeTiooA",
+      title: "Bootie Christ Dance",
+      creator: "BootieChrist",
+      views: [
+        { timestamp: "2005-04-24T11:29:02Z", count: 0 },
+        { timestamp: "2007-02-25T02:11:50Z", count: 3474 },
+        { timestamp: "2007-11-09T05:19:05Z", count: 3692 }
+        ]
+    },
+    {
+      id: "iJLXf_7B368",
+      title: "German Dominating",
+      creator: "BootieChrist",
+      views: [
+        { timestamp: "2005-04-24T11:34:15Z", count: 0 },
+        { timestamp: "2007-02-25T02:11:50Z", count: 1080 },
+        { timestamp: "2007-11-09T05:19:05Z", count: 1117 }
+        ]
+    },
+    {
+      id: "ebKlgRwnpFY",
+      title: "Boat Ride Tahoe @ 60mph",
+      creator: "BootieChrist",
+      views: [
+        { timestamp: "2005-04-24T11:56:05Z", count: 0 },
+        { timestamp: "2007-02-25T02:11:50Z", count: 645 },
+        { timestamp: "2007-11-09T05:19:05Z", count: 896 }
+        ]
+    },
+    {
+      id: "IgaVi5i4axU",
+      title: "BootieChrist in Pink Underwear",
+      creator: "BootieChrist",
+      views: [
+        { timestamp: "2005-04-24T12:30:00Z", count: 0 },
+        { timestamp: "2007-02-25T02:11:50Z", count: 10463 },
+        { timestamp: "2007-11-09T05:19:05Z", count: 10870 }
+        ]
+    },
+    {
+      id: "LeAltgu_pbM",
+      title: "My Snowboarding Skillz",
+      creator: "mw",
+      views: [
+        { timestamp: "2005-04-24T03:56:09Z", count: 0 },
+        { timestamp: "2010-06-16T07:05:27Z", count: 20915 }
+        ]
+    },
+    {
+      id: "aqsRo9JYx5M",
+      title: "Badass Snowboarding",
+      creator: "ilias",
+      views: [
+        { timestamp: "2005-04-24T17:39:03Z", count: 0 },
+        { timestamp: "2010-06-16T07:05:05Z", count: 9228 }
+        ]
+    },
+    {
+      id: "aBfUFr9SBY0",
+      title: "tribute",
+      creator: "gp",
+      views: [
+        { timestamp: "2005-04-24T22:15:18Z", count: 0 },
+        { timestamp: "2007-10-09T20:26:46Z", count: 862 }
+        ]
+    }
+  ];
 
 // Load thumbnails
 const videoStates = {}; // id => { color, loaded }
