@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CSV Odometer Animation</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/odometer.js/0.4.8/themes/odometer-theme-default.min.css" />
+  <style>
+    body { font-family: sans-serif; text-align: center; padding: 2rem; }
+    #odometer { font-size: 4rem; margin-bottom: 1rem; }
+    #dateDisplay { font-size: 1.5rem; margin-bottom: 2rem; }
+    canvas { display: none; }
+  </style>
+</head>
+<body>
+
+  <h1>Odometer CSV Animation</h1>
+
+  <input type="file" id="csvFile" accept=".csv">
+  <br><br>
+
+  <div id="dateDisplay">Date: -</div>
+  <div id="odometer" class="odometer">0</div>
+
+  <button id="startBtn">Start Animation</button>
+  <button id="exportBtn">Export Video</button>
+  <a id="downloadLink" style="display:none;">Download Video</a>
+
+  <canvas id="captureCanvas" width="800" height="400"></canvas>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/odometer.js/0.4.8/odometer.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.2/papaparse.min.js"></script>
+
+  <script>
+    let records = [];
+    let currentIndex = 0;
+    let odometerElem = document.querySelector('#odometer');
+    let dateElem = document.querySelector('#dateDisplay');
+    let interval = null;
+
+    // File parsing
+    document.getElementById('csvFile').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      Papa.parse(file, {
+        header: true,
+        skipEmptyLines: true,
+        complete: function(results) {
+          records = results.data.map(row => ({
+            date: row[Object.keys(row)[0]],
+            value: parseFloat(row[Object.keys(row)[1]])
+          }));
+          alert('CSV Loaded. Ready to animate!');
+        }
+      });
+    });
+
+    document.getElementById('startBtn').addEventListener('click', () => {
+      if (!records.length) return alert('Please upload a CSV file first.');
+      currentIndex = 0;
+
+      interval = setInterval(() => {
+        if (currentIndex >= records.length) {
+          clearInterval(interval);
+          return;
+        }
+        let { date, value } = records[currentIndex];
+        odometerElem.innerHTML = value;
+        dateElem.textContent = 'Date: ' + date;
+        currentIndex++;
+      }, 250); // 0.25 second
+    });
+
+    // Video export
+    const canvas = document.getElementById('captureCanvas');
+    const ctx = canvas.getContext('2d');
+    const stream = canvas.captureStream(60);
+    const mediaRecorder = new MediaRecorder(stream);
+    let chunks = [];
+
+    mediaRecorder.ondataavailable = e => chunks.push(e.data);
+    mediaRecorder.onstop = () => {
+      const blob = new Blob(chunks, { type: 'video/webm' });
+      const url = URL.createObjectURL(blob);
+      const a = document.getElementById('downloadLink');
+      a.href = url;
+      a.download = 'odometer-animation.webm';
+      a.style.display = 'inline';
+      a.textContent = 'Download Video';
+    };
+
+    function drawToCanvas() {
+      ctx.fillStyle = 'white';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = 'black';
+      ctx.font = '40px Arial';
+      ctx.fillText('Date: ' + dateElem.textContent.replace('Date: ', ''), 50, 100);
+      ctx.font = '80px Arial';
+      ctx.fillText(odometerElem.innerText, 50, 200);
+    }
+
+    document.getElementById('exportBtn').addEventListener('click', async () => {
+      if (!records.length) return alert('Load CSV first');
+
+      chunks = [];
+      mediaRecorder.start();
+
+      let frameIndex = 0;
+      function renderFrame() {
+        if (frameIndex >= records.length) {
+          mediaRecorder.stop();
+          return;
+        }
+        let { date, value } = records[frameIndex];
+        odometerElem.innerHTML = value;
+        dateElem.textContent = 'Date: ' + date;
+        drawToCanvas();
+        frameIndex++;
+        setTimeout(renderFrame, 250);
+      }
+      renderFrame();
+    });
+  </script>
+</body>
+</html>
