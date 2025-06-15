@@ -16,12 +16,6 @@
       color: #cc0000;
       margin-bottom: 30px;
     }
-    #chartContainer {
-      width: 90%;
-      max-width: 800px;
-      margin: auto;
-      display: none;
-    }
     table {
       width: 90%;
       max-width: 800px;
@@ -36,7 +30,7 @@
       background-color: #eee;
     }
     button {
-      margin: 10px;
+      margin-top: 10px;
       padding: 10px 20px;
       font-size: 14px;
       background-color: #cc0000;
@@ -51,12 +45,7 @@
   <h1>PewDiePie's Live Sub Estimate + View Bonus</h1>
   <div id="odometer" class="odometer">0</div>
 
-  <button onclick="loadChart()">Add Chart</button>
   <button onclick="downloadCSV()">Download CSV</button>
-
-  <div id="chartContainer">
-    <canvas id="liveChart"></canvas>
-  </div>
 
   <h2>Saved Minutely Data</h2>
   <table id="dataTable">
@@ -70,7 +59,6 @@
   </table>
 
   <script src="https://cdn.jsdelivr.net/npm/odometer@0.4.8/odometer.min.js"></script>
-
   <script>
     var pewdiepieID = "UC-lHJZR3Gqxm24_Vd_AJ5Yw";
     var estsURL = "https://ests.sctools.org/api/get/" + pewdiepieID;
@@ -80,20 +68,6 @@
     var tableBody = document.querySelector("#dataTable tbody");
 
     var savedData = [];
-    var chartLoaded = false;
-    var chart = null;
-    var chartData = {
-      labels: [],
-      datasets: [{
-        label: "Total Estimate (Subs + Views/1500)",
-        data: [],
-        borderColor: "rgba(220, 20, 60, 0.8)",
-        backgroundColor: "rgba(220, 20, 60, 0.2)",
-        fill: true,
-        tension: 0.3,
-        pointRadius: 1
-      }]
-    };
 
     function fetchAndUpdate() {
       var now = new Date();
@@ -121,20 +95,6 @@
 
         odometerEl.innerHTML = total;
 
-        var timeLabel = now.toLocaleTimeString();
-
-        // Chart update (up to 1800 datapoints = 1 hour of 2s intervals)
-        if (chartLoaded && chart) {
-          chartData.labels.push(timeLabel);
-          chartData.datasets[0].data.push(total);
-          if (chartData.labels.length > 1800) {
-            chartData.labels.shift();
-            chartData.datasets[0].data.shift();
-          }
-          chart.update();
-        }
-
-        // Save data at the top of every minute (second == 0)
         if (seconds === 0) {
           var timestamp = now.toTimeString().split(" ")[0];
           savedData.push({ time: timestamp, value: total });
@@ -149,34 +109,9 @@
       });
     }
 
-    // Update every 2 seconds
+    // Start loop
     fetchAndUpdate();
     setInterval(fetchAndUpdate, 2000);
-
-    function loadChart() {
-      if (chartLoaded) return;
-      chartLoaded = true;
-
-      var script = document.createElement("script");
-      script.src = "https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js";
-      script.onload = function () {
-        document.getElementById("chartContainer").style.display = "block";
-        var ctx = document.getElementById("liveChart").getContext("2d");
-        chart = new Chart(ctx, {
-          type: "line",
-          data: chartData,
-          options: {
-            responsive: true,
-            animation: false,
-            scales: {
-              x: { title: { display: true, text: "Time" }},
-              y: { title: { display: true, text: "Estimate" }}
-            }
-          }
-        };
-      };
-      document.body.appendChild(script);
-    }
 
     function downloadCSV() {
       var csv = "Timestamp,Total Estimate\n";
