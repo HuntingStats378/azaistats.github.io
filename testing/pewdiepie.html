@@ -2,32 +2,113 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>PewDiePie Sub Count Tracker</title>
+  <title>PewDiePie Live Tracker</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/odometer@0.4.8/themes/odometer-theme-default.css">
   <style>
     body {
       font-family: Arial, sans-serif;
       text-align: center;
-      margin-top: 50px;
-    }
-    .odometer {
-      font-size: 60px;
-      color: #e60023;
+      background: #f4f4f4;
+      padding: 30px;
     }
     h1 {
+      margin-bottom: 20px;
+    }
+    .odometer {
+      font-size: 48px;
+      color: #cc0000;
       margin-bottom: 30px;
+    }
+    #chartContainer {
+      width: 90%;
+      max-width: 800px;
+      margin: auto;
+    }
+    table {
+      width: 90%;
+      max-width: 800px;
+      margin: 20px auto;
+      border-collapse: collapse;
+    }
+    th, td {
+      border: 1px solid #aaa;
+      padding: 8px;
+    }
+    th {
+      background-color: #eee;
+    }
+    #downloadBtn {
+      margin-top: 10px;
+      padding: 8px 16px;
+      background: #cc0000;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 14px;
     }
   </style>
 </head>
 <body>
-  <h1>PewDiePie's Live Estimate</h1>
-  <div id="odometer" class="odometer">0</div>
 
+  <h1>PewDiePie's Live Sub Estimate + View Bonus</h1>
+  <div id="odometer" class="odometer">110000000</div>
+
+  <div id="chartContainer">
+    <canvas id="liveChart"></canvas>
+  </div>
+
+  <h2>Saved Minutely Data</h2>
+  <table id="dataTable">
+    <thead>
+      <tr>
+        <th>Timestamp</th>
+        <th>Total Estimate</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+  <button id="downloadBtn">Download CSV</button>
+
+  <!-- Odometer and Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/odometer@0.4.8/odometer.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
   <script>
     const pewdiepieID = "UC-lHJZR3Gqxm24_Vd_AJ5Yw";
     const estsURL = `https://ests.sctools.org/api/get/${pewdiepieID}`;
     const mixernoURL = `https://mixerno.space/api/youtube-video-counter/user/4uqo-brP3xs`;
+
+    const odometerEl = document.getElementById("odometer");
+    const tableBody = document.querySelector("#dataTable tbody");
+
+    let lastMinuteSave = 0;
+    let savedData = [];
+
+    // Chart setup
+    const ctx = document.getElementById('liveChart').getContext('2d');
+    const chartData = {
+      labels: [],
+      datasets: [{
+        label: 'Total Estimate (Subs + Views/1500)',
+        data: [],
+        borderColor: 'rgba(220, 20, 60, 0.8)',
+        backgroundColor: 'rgba(220, 20, 60, 0.2)',
+        fill: true,
+        tension: 0.3,
+        pointRadius: 2
+      }]
+    };
+    const chart = new Chart(ctx, {
+      type: 'line',
+      data: chartData,
+      options: {
+        responsive: true,
+        scales: {
+          x: { title: { display: true, text: 'Time' }},
+          y: { title: { display: true, text: 'Combined Count' }}
+        }
+      }
+    });
 
     async function fetchAndUpdate() {
       try {
@@ -39,25 +120,57 @@
         const estsData = await estsRes.json();
         const mixernoData = await mixernoRes.json();
 
-        const estimatedSubs = estsData.stats.estCount || 0;
+        const estimatedSubs = estsData?.stats?.estCount || 0;
+        const viewsObj = mixernoData.counts.find(c => c.value === "views");
+        const views = viewsObj ? parseInt(viewsObj.count, 10) : 0;
+        const bonus = Math.floor(views / 1500);
+        const total = estimatedSubs + bonus;
+        const timestamp = new Date().toLocaleTimeString();
 
-        const viewObj = mixernoData.counts.find(item => item.value === "views");
-        const views = viewObj ? parseInt(viewObj.count, 10) : 0;
-        const viewFactor = Math.floor(views / 1500);
+        odometerEl.innerHTML = total;
 
-        const totalCount = estimatedSubs + viewFactor;
+        // Update chart
+        chartData.labels.push(timestamp);
+        chartData.datasets[0].data.push(total);
+        if (chartData.labels.length > 1800) {
+          chartData.labels.shift();
+          chartData.datasets[0].data.shift();
+        }
+        chart.update();
 
-        document.getElementById("odometer").innerHTML = totalCount;
+        // Save to table every full minute
+        const now = Date.now();
+        if (!lastMinuteSave || now - lastMinuteSave >= 60000) {
+          lastMinuteSave = now;
+          savedData.push({ time: timestamp, value: total });
+
+          const row = document.createElement("tr");
+          row.innerHTML = `<td>${timestamp}</td><td>${total}</td>`;
+          tableBody.appendChild(row);
+        }
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error("Fetch failed:", error);
       }
     }
 
-    // Initial load
-    fetchAndUpdate();
-
-    // Update every 2 seconds
     setInterval(fetchAndUpdate, 2000);
+    fetchAndUpdate(); // Initial
+
+    // Export to CSV
+    document.getElementById("downloadBtn").addEventListener("click", () => {
+      let csv = "Timestamp,Total Estimate\n";
+      savedData.forEach(entry => {
+        csv += `${entry.time},${entry.value}\n`;
+      });
+
+      const blob = new Blob([csv], { type: "text/csv" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "pewdiepie_data.csv";
+      a.click();
+      URL.revokeObjectURL(url);
+    });
   </script>
 </body>
 </html>
