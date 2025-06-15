@@ -42,7 +42,7 @@
 </head>
 <body>
 
-  <h1>PewDiePie's Live Sub Estimate + View Bonus</h1>
+  <h1>PewDiePie's Live Sub Estmate + View Bonus</h1>
   <div id="odometer" class="odometer">0</div>
 
   <button onclick="downloadCSV()">Download CSV</button>
@@ -68,10 +68,10 @@
     var tableBody = document.querySelector("#dataTable tbody");
 
     var savedData = [];
+    var lastSavedMinute = null; // Track last saved minute
 
     function fetchAndUpdate() {
       var now = new Date();
-      var seconds = now.getSeconds();
 
       Promise.all([
         fetch(estsURL).then(function (r) { return r.json(); }),
@@ -95,8 +95,12 @@
 
         odometerEl.innerHTML = total;
 
-        if (seconds === 0) {
+        // Save once per new minute
+        var currentMinute = now.getHours() + ":" + now.getMinutes();
+        if (currentMinute !== lastSavedMinute) {
+          lastSavedMinute = currentMinute;
           var timestamp = now.toTimeString().split(" ")[0];
+
           savedData.push({ time: timestamp, value: total });
 
           var row = document.createElement("tr");
