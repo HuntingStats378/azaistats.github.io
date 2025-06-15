@@ -11,9 +11,6 @@
       background: #f4f4f4;
       padding: 30px;
     }
-    h1 {
-      margin-bottom: 20px;
-    }
     .odometer {
       font-size: 48px;
       color: #cc0000;
@@ -23,6 +20,7 @@
       width: 90%;
       max-width: 800px;
       margin: auto;
+      display: none;
     }
     table {
       width: 90%;
@@ -37,21 +35,24 @@
     th {
       background-color: #eee;
     }
-    #downloadBtn {
-      margin-top: 10px;
-      padding: 8px 16px;
-      background: #cc0000;
+    button {
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 14px;
+      background-color: #cc0000;
       color: white;
       border: none;
       cursor: pointer;
-      font-size: 14px;
     }
   </style>
 </head>
 <body>
 
   <h1>PewDiePie's Live Sub Estimate + View Bonus</h1>
-  <div id="odometer" class="odometer">110000000</div>
+  <div id="odometer" class="odometer">0</div>
+
+  <button onclick="loadChart()">Add Chart</button>
+  <button onclick="downloadCSV()">Download CSV</button>
 
   <div id="chartContainer">
     <canvas id="liveChart"></canvas>
@@ -67,110 +68,130 @@
     </thead>
     <tbody></tbody>
   </table>
-  <button id="downloadBtn">Download CSV</button>
 
-  <!-- Odometer and Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/odometer@0.4.8/odometer.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 
   <script>
-    const pewdiepieID = "UC-lHJZR3Gqxm24_Vd_AJ5Yw";
-    const estsURL = `https://ests.sctools.org/api/get/${pewdiepieID}`;
-    const mixernoURL = `https://mixerno.space/api/youtube-video-counter/user/4uqo-brP3xs`;
+    var pewdiepieID = "UC-lHJZR3Gqxm24_Vd_AJ5Yw";
+    var estsURL = "https://ests.sctools.org/api/get/" + pewdiepieID;
+    var mixernoURL = "https://mixerno.space/api/youtube-video-counter/user/4uqo-brP3xs";
 
-    const odometerEl = document.getElementById("odometer");
-    const tableBody = document.querySelector("#dataTable tbody");
+    var odometerEl = document.getElementById("odometer");
+    var tableBody = document.querySelector("#dataTable tbody");
 
-    let lastMinuteSave = 0;
-    let savedData = [];
-
-    // Chart setup
-    const ctx = document.getElementById('liveChart').getContext('2d');
-    const chartData = {
+    var savedData = [];
+    var chartLoaded = false;
+    var chart = null;
+    var chartData = {
       labels: [],
       datasets: [{
-        label: 'Total Estimate (Subs + Views/1500)',
+        label: "Total Estimate (Subs + Views/1500)",
         data: [],
-        borderColor: 'rgba(220, 20, 60, 0.8)',
-        backgroundColor: 'rgba(220, 20, 60, 0.2)',
+        borderColor: "rgba(220, 20, 60, 0.8)",
+        backgroundColor: "rgba(220, 20, 60, 0.2)",
         fill: true,
         tension: 0.3,
-        pointRadius: 2
+        pointRadius: 1
       }]
     };
-    const chart = new Chart(ctx, {
-      type: 'line',
-      data: chartData,
-      options: {
-        responsive: true,
-        scales: {
-          x: { title: { display: true, text: 'Time' }},
-          y: { title: { display: true, text: 'Combined Count' }}
+
+    function fetchAndUpdate() {
+      var now = new Date();
+      var seconds = now.getSeconds();
+
+      Promise.all([
+        fetch(estsURL).then(function (r) { return r.json(); }),
+        fetch(mixernoURL).then(function (r) { return r.json(); })
+      ])
+      .then(function (results) {
+        var estsData = results[0];
+        var mixernoData = results[1];
+
+        var estimatedSubs = estsData.stats ? estsData.stats.estCount : 0;
+        var views = 0;
+        for (var i = 0; i < mixernoData.counts.length; i++) {
+          if (mixernoData.counts[i].value === "views") {
+            views = parseInt(mixernoData.counts[i].count, 10);
+            break;
+          }
         }
-      }
-    });
 
-    async function fetchAndUpdate() {
-      try {
-        const [estsRes, mixernoRes] = await Promise.all([
-          fetch(estsURL),
-          fetch(mixernoURL)
-        ]);
-
-        const estsData = await estsRes.json();
-        const mixernoData = await mixernoRes.json();
-
-        const estimatedSubs = estsData?.stats?.estCount || 0;
-        const viewsObj = mixernoData.counts.find(c => c.value === "views");
-        const views = viewsObj ? parseInt(viewsObj.count, 10) : 0;
-        const bonus = Math.floor(views / 1500);
-        const total = estimatedSubs + bonus;
-        const timestamp = new Date().toLocaleTimeString();
+        var bonus = Math.floor(views / 1500);
+        var total = estimatedSubs + bonus;
 
         odometerEl.innerHTML = total;
 
-        // Update chart
-        chartData.labels.push(timestamp);
-        chartData.datasets[0].data.push(total);
-        if (chartData.labels.length > 1800) {
-          chartData.labels.shift();
-          chartData.datasets[0].data.shift();
-        }
-        chart.update();
+        var timeLabel = now.toLocaleTimeString();
 
-        // Save to table every full minute
-        const now = Date.now();
-        if (!lastMinuteSave || now - lastMinuteSave >= 60000) {
-          lastMinuteSave = now;
+        // Chart update (up to 1800 datapoints = 1 hour of 2s intervals)
+        if (chartLoaded && chart) {
+          chartData.labels.push(timeLabel);
+          chartData.datasets[0].data.push(total);
+          if (chartData.labels.length > 1800) {
+            chartData.labels.shift();
+            chartData.datasets[0].data.shift();
+          }
+          chart.update();
+        }
+
+        // Save data at the top of every minute (second == 0)
+        if (seconds === 0) {
+          var timestamp = now.toTimeString().split(" ")[0];
           savedData.push({ time: timestamp, value: total });
 
-          const row = document.createElement("tr");
-          row.innerHTML = `<td>${timestamp}</td><td>${total}</td>`;
+          var row = document.createElement("tr");
+          row.innerHTML = "<td>" + timestamp + "</td><td>" + total + "</td>";
           tableBody.appendChild(row);
         }
-      } catch (error) {
-        console.error("Fetch failed:", error);
-      }
+      })
+      .catch(function (err) {
+        console.log("Fetch error:", err);
+      });
     }
 
+    // Update every 2 seconds
+    fetchAndUpdate();
     setInterval(fetchAndUpdate, 2000);
-    fetchAndUpdate(); // Initial
 
-    // Export to CSV
-    document.getElementById("downloadBtn").addEventListener("click", () => {
-      let csv = "Timestamp,Total Estimate\n";
-      savedData.forEach(entry => {
-        csv += `${entry.time},${entry.value}\n`;
-      });
+    function loadChart() {
+      if (chartLoaded) return;
+      chartLoaded = true;
 
-      const blob = new Blob([csv], { type: "text/csv" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
+      var script = document.createElement("script");
+      script.src = "https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js";
+      script.onload = function () {
+        document.getElementById("chartContainer").style.display = "block";
+        var ctx = document.getElementById("liveChart").getContext("2d");
+        chart = new Chart(ctx, {
+          type: "line",
+          data: chartData,
+          options: {
+            responsive: true,
+            animation: false,
+            scales: {
+              x: { title: { display: true, text: "Time" }},
+              y: { title: { display: true, text: "Estimate" }}
+            }
+          }
+        };
+      };
+      document.body.appendChild(script);
+    }
+
+    function downloadCSV() {
+      var csv = "Timestamp,Total Estimate\n";
+      for (var i = 0; i < savedData.length; i++) {
+        csv += savedData[i].time + "," + savedData[i].value + "\n";
+      }
+
+      var blob = new Blob([csv], { type: "text/csv" });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement("a");
       a.href = url;
       a.download = "pewdiepie_data.csv";
       a.click();
       URL.revokeObjectURL(url);
-    });
+    }
   </script>
 </body>
 </html>
