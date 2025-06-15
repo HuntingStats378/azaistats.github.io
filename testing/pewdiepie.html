@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>PewDiePie Sub Count Tracker</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/odometer@0.4.8/themes/odometer-theme-default.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin-top: 50px;
+    }
+    .odometer {
+      font-size: 60px;
+      color: #e60023;
+    }
+    h1 {
+      margin-bottom: 30px;
+    }
+  </style>
+</head>
+<body>
+  <h1>PewDiePie's Live Estimate</h1>
+  <div id="odometer" class="odometer">0</div>
+
+  <script src="https://cdn.jsdelivr.net/npm/odometer@0.4.8/odometer.min.js"></script>
+  <script>
+    const pewdiepieID = "UC-lHJZR3Gqxm24_Vd_AJ5Yw";
+    const estsURL = `https://ests.sctools.org/api/get/${pewdiepieID}`;
+    const mixernoURL = `https://mixerno.space/api/youtube-video-counter/user/4uqo-brP3xs`;
+
+    async function fetchAndUpdate() {
+      try {
+        const [estsRes, mixernoRes] = await Promise.all([
+          fetch(estsURL),
+          fetch(mixernoURL)
+        ]);
+
+        const estsData = await estsRes.json();
+        const mixernoData = await mixernoRes.json();
+
+        const estimatedSubs = estsData.stats.estCount || 0;
+
+        const viewObj = mixernoData.counts.find(item => item.value === "views");
+        const views = viewObj ? parseInt(viewObj.count, 10) : 0;
+        const viewFactor = Math.floor(views / 1500);
+
+        const totalCount = estimatedSubs + viewFactor;
+
+        document.getElementById("odometer").innerHTML = totalCount;
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    }
+
+    // Initial load
+    fetchAndUpdate();
+
+    // Update every 2 seconds
+    setInterval(fetchAndUpdate, 2000);
+  </script>
+</body>
+</html>
