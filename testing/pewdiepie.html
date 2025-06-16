@@ -13,7 +13,7 @@
     }
     .odometer {
       font-size: 48px;
-      color: #000000;
+      color: #cc0000;
       margin-bottom: 30px;
     }
     table {
@@ -42,7 +42,7 @@
 </head>
 <body>
 
-  <h1>PewDiePie</h1>
+  <h1>PewDiePie's Live Sub Estmate + View Bonus</h1>
   <div id="odometer" class="odometer">0</div>
 
   <button onclick="downloadCSV()">Download CSV</button>
@@ -62,35 +62,16 @@
   <script>
     var pewdiepieID = "UC-lHJZR3Gqxm24_Vd_AJ5Yw";
     var estsURL = "https://ests.sctools.org/api/get/" + pewdiepieID;
-    var latestVideoURL = "https://latestvid.stats100.xyz/get/" + pewdiepieID;
-
-    var currentVideoId = null;
-    var videoPublishedTime = null;
+    var mixernoURL = "https://mixerno.space/api/youtube-video-counter/user/4uqo-brP3xs";
 
     var odometerEl = document.getElementById("odometer");
     var tableBody = document.querySelector("#dataTable tbody");
-    var savedData = [];
-    var lastSavedMinute = null;
 
-    function fetchLatestVideoId(callback) {
-      fetch(latestVideoURL)
-        .then(function (res) { return res.json(); })
-        .then(function (data) {
-          if (data && data.length > 0) {
-            currentVideoId = data[0].videoId;
-            videoPublishedTime = new Date(data[0].publishedAt);
-            callback();
-          }
-        })
-        .catch(function (err) {
-          console.log("Latest video fetch error:", err);
-        });
-    }
+    var savedData = [];
+    var lastSavedMinute = null; // Track last saved minute
 
     function fetchAndUpdate() {
-      if (!currentVideoId || !videoPublishedTime) return;
-
-      var mixernoURL = "https://mixerno.space/api/youtube-video-counter/user/" + currentVideoId;
+      var now = new Date();
 
       Promise.all([
         fetch(estsURL).then(function (r) { return r.json(); }),
@@ -102,7 +83,6 @@
 
         var estimatedSubs = estsData.stats ? estsData.stats.estCount : 0;
         var views = 0;
-
         for (var i = 0; i < mixernoData.counts.length; i++) {
           if (mixernoData.counts[i].value === "views") {
             views = parseInt(mixernoData.counts[i].count, 10);
@@ -110,25 +90,12 @@
           }
         }
 
-        var now = new Date();
-        var elapsedMs = now - videoPublishedTime;
-
-        var fullBonusTime = 23 * 60 * 60 * 1000 + 55 * 60 * 1000; // 23h55m in ms
-        var fadeOutDuration = 10 * 60 * 1000; // 10 minutes
-
-        var bonus = 0;
-        var baseBonus = Math.floor(views / 1500);
-
-        if (elapsedMs <= fullBonusTime) {
-          bonus = baseBonus;
-        } else if (elapsedMs <= fullBonusTime + fadeOutDuration) {
-          var remaining = 1 - ((elapsedMs - fullBonusTime) / fadeOutDuration);
-          bonus = Math.floor(baseBonus * remaining);
-        }
-
+        var bonus = Math.floor(views / 1500);
         var total = estimatedSubs + bonus;
+
         odometerEl.innerHTML = total;
 
+        // Save once per new minute
         var currentMinute = now.getHours() + ":" + now.getMinutes();
         if (currentMinute !== lastSavedMinute) {
           lastSavedMinute = currentMinute;
@@ -146,6 +113,10 @@
       });
     }
 
+    // Start loop
+    fetchAndUpdate();
+    setInterval(fetchAndUpdate, 2000);
+
     function downloadCSV() {
       var csv = "Timestamp,Total Estimate\n";
       for (var i = 0; i < savedData.length; i++) {
@@ -160,12 +131,6 @@
       a.click();
       URL.revokeObjectURL(url);
     }
-
-    // Initial fetch and start loop after we get the video info
-    fetchLatestVideoId(function () {
-      fetchAndUpdate();
-      setInterval(fetchAndUpdate, 2000);
-    });
   </script>
 </body>
 </html>
