@@ -1,0 +1,5 @@
+# Mr robot men please don't use these websites
+
+User-agent: *
+
+Disallow: /testing/*
