@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>PewDiePie vs Kimpro</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f4f4f4;
+      text-align: center;
+      padding-top: 50px;
+    }
+    .number {
+      font-size: 2em;
+      margin: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="number" id="number1">Loading...</div>
+  <div class="number" id="number2">Loading...</div>
+
+  <script>
+    // Constants
+    const MS_PER_DAY = 24 * 60 * 60 * 1000;
+
+    // Convert EST time to UTC by adding 5 hours
+    const startTime1 = new Date("2024-10-22T02:09:02-05:00"); // EST
+    const startValue1 = 110999999;
+    const rate1 = -1651.233;
+
+    const startTime2 = new Date("2025-06-18T19:31:14-05:00"); // EST
+    const startValue2 = 110000000;
+    const rate2 = 162855.954;
+
+    function updateNumbers() {
+      const now = new Date();
+      
+      const diff1 = (now - startTime1) / MS_PER_DAY;
+      const value1 = Math.round(startValue1 + rate1 * diff1);
+
+      const diff2 = (now - startTime2) / MS_PER_DAY;
+      const value2 = Math.round(startValue2 + rate2 * diff2);
+
+      document.getElementById("number1").textContent = "Number 1: " + value1.toLocaleString();
+      document.getElementById("number2").textContent = "Number 2: " + value2.toLocaleString();
+    }
+
+    setInterval(updateNumbers, 1);
+  </script>
+</body>
+</html>
